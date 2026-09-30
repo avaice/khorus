@@ -1,4 +1,4 @@
-import { House, Music } from "lucide-react";
+import { House, Info, Music } from "lucide-react";
 import { useState } from "react";
 import { setEnabled } from "./api";
 import {
@@ -9,9 +9,9 @@ import {
   type MenuItem,
 } from "./components";
 import { useStatus } from "./hooks";
-import { HomePage, SoundPackPage } from "./pages";
+import { AboutPage, HomePage, SoundPackPage } from "./pages";
 
-type PageId = "home" | "sound-pack";
+type PageId = "home" | "sound-pack" | "about";
 
 const MENU_ITEMS: readonly MenuItem<PageId>[] = [
   {
@@ -23,6 +23,11 @@ const MENU_ITEMS: readonly MenuItem<PageId>[] = [
     id: "sound-pack",
     label: "サウンドパック",
     icon: <Music size={16} />,
+  },
+  {
+    id: "about",
+    label: "このアプリについて",
+    icon: <Info size={16} />,
   },
 ];
 
@@ -59,6 +64,7 @@ export default function App() {
         <HomePage status={status} onChange={refresh} />
       )}
       {status && pageId === "sound-pack" && <SoundPackPage status={status} />}
+      {pageId === "about" && <AboutPage />}
     </AppShell>
   );
 }

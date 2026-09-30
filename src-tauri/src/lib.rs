@@ -62,6 +62,7 @@ pub fn run() {
     });
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
         .menu(|app| {
             let app_menu = SubmenuBuilder::new(app, "Khorus")
                 .quit_with_text("Khorusを終了")

@@ -203,3 +203,52 @@ body {
 .switch-label {
   font-size: 14px;
 }
+
+.info-sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 48px 24px;
+}
+
+.info-sheet-title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.info-sheet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  font-size: 15px;
+}
+
+.info-sheet-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.info-sheet-label {
+  text-align: right;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.info-sheet-value {
+  margin: 0;
+  color: var(--text-muted);
+  opacity: 0.8;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.link {
+  color: var(--accent);
+  text-decoration: none;
+}
