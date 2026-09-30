@@ -1,6 +1,6 @@
 {
-  "title": "Khorus デフォルト",
-  "description": "macOS標準のシステムサウンドだけで構成したデフォルトのパックです。",
+  "title": "デフォルト",
+  "description": "macOS標準のシステムサウンドを、キーごとに使い分けたパックです。",
   "keys": {
     "a": "macos:Pop",
     "b": "macos:Tink",

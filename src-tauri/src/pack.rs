@@ -11,9 +11,9 @@ use thiserror::Error;
 
 use crate::keys::Key;
 
-const MANIFEST_NAME: &str = "pack.json";
+pub const MANIFEST_NAME: &str = "pack.json";
 const SYSTEM_PREFIX: &str = "macos:";
-const MAX_FILE_BYTES: usize = 5 * 1024 * 1024;
+pub const MAX_FILE_BYTES: usize = 5 * 1024 * 1024;
 const MAX_DURATION: Duration = Duration::from_secs(10);
 
 pub type Sound = Buffered<Decoder<Cursor<Vec<u8>>>>;
@@ -35,6 +35,14 @@ pub enum PackError {
     TooLong(String),
     #[error("音声として読み込めません: {0}")]
     Undecodable(String),
+    #[error("ファイルを読み込めません: {0}")]
+    Io(#[from] std::io::Error),
+    #[error("zipとして読み込めません: {0}")]
+    Zip(#[from] zip::result::ZipError),
+    #[error("ファイルの数が多すぎます")]
+    TooManyFiles,
+    #[error("シンボリックリンクは使えません: {0}")]
+    Symlink(String),
 }
 
 #[derive(Deserialize)]
@@ -74,6 +82,14 @@ impl LoadedPack {
             _ => None,
         }
     }
+}
+
+pub fn read_info(manifest_bytes: &[u8]) -> Result<PackInfo, PackError> {
+    let manifest: Manifest = serde_json::from_slice(manifest_bytes)?;
+    Ok(PackInfo {
+        title: manifest.title,
+        description: manifest.description,
+    })
 }
 
 pub fn load(files: &PackFiles) -> Result<LoadedPack, PackError> {
@@ -153,7 +169,7 @@ impl<'a> SoundLoader<'a> {
     }
 }
 
-fn normalize_relative_path(spec: &str) -> Result<String, PackError> {
+pub fn normalize_relative_path(spec: &str) -> Result<String, PackError> {
     let mut parts = Vec::new();
     for component in Path::new(spec).components() {
         match component {
@@ -230,7 +246,7 @@ mod tests {
 
     #[test]
     fn default_pack_follows_the_reference_keymap() {
-        let pack = crate::default_pack::load().unwrap();
+        let pack = load(&crate::builtin::default_pack().files()).unwrap();
         assert!(pack.pick(Key::Char('a')).is_some());
         assert!(pack.pick(Key::Char('7')).is_some());
         assert!(pack.pick(Key::Space).is_some());
@@ -241,7 +257,7 @@ mod tests {
 
     #[test]
     fn default_pack_sounds_are_audible() {
-        let pack = crate::default_pack::load().unwrap();
+        let pack = load(&crate::builtin::default_pack().files()).unwrap();
         for key in [Key::Space, Key::Enter, Key::Backspace, Key::Char('a')] {
             let sound = pack.sound(pack.pick(key).unwrap()).unwrap().clone();
             let peak = sound.fold(0f32, |peak, sample| peak.max(sample.abs()));

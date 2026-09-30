@@ -1,0 +1,38 @@
+{
+  "title": "クリック",
+  "description": "控えめなクリック音で統一したパックです。",
+  "keys": {
+    "a": "macos:Tink",
+    "b": "macos:Tink",
+    "c": "macos:Tink",
+    "d": "macos:Tink",
+    "e": "macos:Tink",
+    "f": "macos:Tink",
+    "g": "macos:Tink",
+    "h": "macos:Tink",
+    "i": "macos:Tink",
+    "j": "macos:Tink",
+    "k": "macos:Tink",
+    "l": "macos:Tink",
+    "m": "macos:Tink",
+    "n": "macos:Tink",
+    "o": "macos:Tink",
+    "p": "macos:Tink",
+    "q": "macos:Tink",
+    "r": "macos:Tink",
+    "s": "macos:Tink",
+    "t": "macos:Tink",
+    "u": "macos:Tink",
+    "v": "macos:Tink",
+    "w": "macos:Tink",
+    "x": "macos:Tink",
+    "y": "macos:Tink",
+    "z": "macos:Tink",
+    "space": "macos:Pop",
+    "enter": "macos:Glass",
+    "backspace": "macos:Basso"
+  },
+  "fallback": [
+    "macos:Tink"
+  ]
+}
