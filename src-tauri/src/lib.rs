@@ -6,6 +6,7 @@ mod keys;
 mod library;
 mod pack;
 mod settings;
+mod tray;
 mod volume;
 
 use std::path::Path;
@@ -13,8 +14,8 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use serde::Serialize;
-use tauri::menu::{Menu, SubmenuBuilder};
-use tauri::{Manager, State};
+use tauri::menu::{CheckMenuItem, Menu, SubmenuBuilder};
+use tauri::{Manager, State, Wry};
 
 use crate::audio::AudioEngine;
 use crate::library::Library;
@@ -26,9 +27,15 @@ struct AppState {
     audio: AudioEngine,
     library: Library,
     settings: SettingsStore,
+    tray_toggle: CheckMenuItem<Wry>,
 }
 
 impl AppState {
+    fn set_enabled(&self, enabled: bool) {
+        self.enabled.store(enabled, Ordering::SeqCst);
+        let _ = self.tray_toggle.set_checked(enabled);
+    }
+
     fn selected_id(&self) -> String {
         self.settings
             .get()
@@ -72,7 +79,7 @@ fn get_status(state: State<AppState>) -> Status {
 
 #[tauri::command]
 fn set_enabled(state: State<AppState>, enabled: bool) {
-    state.enabled.store(enabled, Ordering::SeqCst);
+    state.set_enabled(enabled);
 }
 
 #[tauri::command]
@@ -171,6 +178,7 @@ pub fn run() {
             activate_initial(&library, &settings, &audio);
 
             let enabled = Arc::new(AtomicBool::new(true));
+            let tray_toggle = tray::build(app.handle(), true)?;
             let listener_enabled = Arc::clone(&enabled);
             let listener_audio = audio.clone();
             keyboard::spawn(move |key| {
@@ -184,8 +192,15 @@ pub fn run() {
                 audio,
                 library,
                 settings,
+                tray_toggle,
             });
             Ok(())
+        })
+        .on_window_event(|window, event| {
+            if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+                api.prevent_close();
+                tray::hide_main_window(window);
+            }
         })
         .invoke_handler(tauri::generate_handler![
             get_status,
@@ -198,6 +213,14 @@ pub fn run() {
             import_pack,
             delete_pack
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application")
+        .run(|app, event| {
+            #[cfg(target_os = "macos")]
+            if let tauri::RunEvent::Reopen { .. } = event {
+                tray::show_main_window(app);
+            }
+            #[cfg(not(target_os = "macos"))]
+            let _ = (app, event);
+        });
 }
