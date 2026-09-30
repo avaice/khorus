@@ -1,6 +1,9 @@
+import type { ReactNode } from "react";
+
 export type MenuItem<Id extends string> = {
   id: Id;
   label: string;
+  icon: ReactNode;
 };
 
 type MenuListProps<Id extends string> = {
@@ -24,6 +27,7 @@ export function MenuList<Id extends string>({
             aria-current={item.id === activeId ? "page" : undefined}
             onClick={() => onSelect(item.id)}
           >
+            {item.icon}
             {item.label}
           </button>
         </li>

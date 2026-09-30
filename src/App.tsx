@@ -1,3 +1,4 @@
+import { House, Music } from "lucide-react";
 import { useState } from "react";
 import { setEnabled } from "./api";
 import {
@@ -13,8 +14,16 @@ import { HomePage, SoundPackPage } from "./pages";
 type PageId = "home" | "sound-pack";
 
 const MENU_ITEMS: readonly MenuItem<PageId>[] = [
-  { id: "home", label: "ホーム" },
-  { id: "sound-pack", label: "サウンドパック" },
+  {
+    id: "home",
+    label: "ホーム",
+    icon: <House size={16} />,
+  },
+  {
+    id: "sound-pack",
+    label: "サウンドパック",
+    icon: <Music size={16} />,
+  },
 ];
 
 export default function App() {
