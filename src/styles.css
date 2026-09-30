@@ -1,8 +1,9 @@
 :root {
   color-scheme: light dark;
   font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
-  --bg: #f5f5f7;
-  --surface: #ffffff;
+  --bg: #ffffff;
+  --bg-translucent: rgb(255 255 255 / 0.6);
+  --surface: #f5f5f7;
   --text: #1d1d1f;
   --text-muted: #6e6e73;
   --accent: #0a84ff;
@@ -11,7 +12,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1c1c1e;
+    --bg: #1e1e1e;
+    --bg-translucent: rgb(30 30 30 / 0.6);
     --surface: #2c2c2e;
     --text: #f5f5f7;
     --text-muted: #a1a1a6;
@@ -23,10 +25,88 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
-  background: var(--bg);
+  background: transparent;
   color: var(--text);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#root {
+  height: 100vh;
+  background: transparent;
+}
+
+.app-shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "menu header"
+    "menu content";
+  height: 100%;
+}
+
+.app-shell-header {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-translucent);
+}
+
+.app-shell-menu {
+  grid-area: menu;
+  padding: 60px 8px 12px;
+  overflow-y: auto;
+}
+
+.app-shell-content {
+  grid-area: content;
+  background: var(--bg-translucent);
+  overflow-y: auto;
+}
+
+.header-bar {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.header-bar-title {
+  margin: 0;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-list-item {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  text-align: left;
+}
+
+.menu-list-item[aria-current="page"] {
+  background: var(--accent);
+  color: #ffffff;
 }
 
 .page {
@@ -34,11 +114,6 @@ body {
   flex-direction: column;
   gap: 16px;
   padding: 24px;
-}
-
-.page-title {
-  margin: 0;
-  font-size: 24px;
 }
 
 .card {
@@ -75,14 +150,12 @@ body {
   background: var(--accent);
   color: #ffffff;
   font-size: 14px;
-  cursor: pointer;
 }
 
 .switch {
   display: flex;
   align-items: center;
   gap: 12px;
-  cursor: pointer;
 }
 
 .switch input {

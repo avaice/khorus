@@ -1,5 +1,55 @@
-import { HomePage } from "./pages";
+import { useState } from "react";
+import { setEnabled } from "./api";
+import {
+  AppShell,
+  HeaderBar,
+  MenuList,
+  Switch,
+  type MenuItem,
+} from "./components";
+import { useStatus } from "./hooks";
+import { HomePage, SoundPackPage } from "./pages";
+
+type PageId = "home" | "sound-pack";
+
+const MENU_ITEMS: readonly MenuItem<PageId>[] = [
+  { id: "home", label: "ホーム" },
+  { id: "sound-pack", label: "サウンドパック" },
+];
 
 export default function App() {
-  return <HomePage />;
+  const [pageId, setPageId] = useState<PageId>("home");
+  const { status, refresh } = useStatus();
+
+  const handleToggle = async (enabled: boolean) => {
+    await setEnabled(enabled);
+    await refresh();
+  };
+
+  return (
+    <AppShell
+      header={
+        <HeaderBar
+          title="Khorus"
+          actions={
+            status && (
+              <Switch
+                checked={status.enabled}
+                label="音を鳴らす"
+                onChange={handleToggle}
+              />
+            )
+          }
+        />
+      }
+      menu={
+        <MenuList items={MENU_ITEMS} activeId={pageId} onSelect={setPageId} />
+      }
+    >
+      {status && pageId === "home" && (
+        <HomePage status={status} onChange={refresh} />
+      )}
+      {status && pageId === "sound-pack" && <SoundPackPage status={status} />}
+    </AppShell>
+  );
 }
