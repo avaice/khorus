@@ -63,7 +63,7 @@ export default function App() {
       {status && pageId === "home" && (
         <HomePage status={status} onChange={refresh} />
       )}
-      {status && pageId === "sound-pack" && <SoundPackPage status={status} />}
+      {pageId === "sound-pack" && <SoundPackPage />}
       {pageId === "about" && <AboutPage />}
     </AppShell>
   );

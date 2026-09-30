@@ -16,6 +16,7 @@
   --switch-off: rgb(0 0 0 / 0.12);
   --accent: #007aff;
   --on-accent: #ffffff;
+  --danger: #ff3b30;
 }
 
 @supports (color: AccentColor) {
@@ -283,4 +284,86 @@ button {
 
 .link:hover {
   text-decoration: underline;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.toolbar-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.error-text {
+  margin: 0;
+  color: var(--danger);
+}
+
+.choice-list {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: var(--group);
+  list-style: none;
+}
+
+.choice-list-row {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+
+.choice-list-row + .choice-list-row {
+  border-top: 1px solid var(--separator);
+}
+
+.choice-list-main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 8px 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+}
+
+.choice-list-check {
+  display: flex;
+  flex: none;
+  width: 16px;
+  color: var(--accent);
+}
+
+.choice-list-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.choice-list-label {
+  font-weight: 500;
+}
+
+.choice-list-description {
+  color: var(--text-muted);
+}
+
+.icon-button {
+  display: flex;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.icon-button:active {
+  background: var(--separator);
 }
