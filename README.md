@@ -1,73 +1,73 @@
 # Khorus
 
-キーを打つたびに効果音を鳴らす、macOS 向けのアプリです。サウンドパックを読み込んで、打鍵の音を好きに着せ替えられます。
+A macOS app that plays a sound with every keystroke. Load sound packs to customize the sound of your typing.
 
-## 特徴
+## Features
 
-- キー入力に合わせて効果音を鳴らす
-- Enter、Space、その他のキーごとに音量を調整できる
-- サウンドパックの読み込み、切り替え、削除
-- メニューバーに常駐し、ウィンドウを閉じても音を鳴らし続ける
-- ログイン時の自動起動
+- Play sound effects as you type
+- Adjust the volume separately for Enter, Space, and other keys
+- Import, switch, and delete sound packs
+- Keep running in the menu bar and playing sounds after closing the window
+- Launch automatically at login
 
-## 動作環境
+## Requirements
 
 - macOS
-- Apple シリコンの Mac(Intel Mac には対応していません)
+- A Mac with Apple silicon (Intel Macs are not supported)
 
-## インストール
+## Installation
 
-1. ターミナルを開く
-2. 次のコマンドを実行する: curl -fsSL TBD | bash
-3. 管理者権限を求められたら、パスワードを入力する
+1. Open Terminal
+2. Run the following command: curl -fsSL TBD | bash
+3. Enter your password if prompted for administrator privileges
 
-- インストール先は /Applications です。すでにインストール済みの場合は、上書きして更新します
-- 配布 URL は準備中(TBD)です
+- The app is installed in /Applications. If already installed, it will be overwritten with the update
+- The download URL is not yet available (TBD)
 
-### アンインストール
+### Uninstallation
 
-1. メニューバーのアイコンから「Khorusを終了」を選ぶ
-2. /Applications の Khorus.app を削除する
-3. 設定やサウンドパックも消す場合は、~/Library/Application Support/com.avaice.khorus を削除する
+1. Select "Quit Khorus" from the menu bar icon
+2. Delete Khorus.app from /Applications
+3. To also remove settings and sound packs, delete ~/Library/Application Support/com.avaice.khorus
 
-- 自動起動をオンにしていた場合は、アンインストールの前に、ホームの「スタートアップ設定」でオフにしてください
+- If you enabled automatic launch at login, turn it off under "Startup Settings" on the Home screen before uninstalling
 
-## 使い方
+## Usage
 
-### はじめに
+### Getting Started
 
-1. Khorus を起動する
-2. ホームの「許可をリクエスト」を押す
-3. システム設定の「プライバシーとセキュリティ」にある「入力監視」で、Khorus を許可する
+1. Launch Khorus
+2. Click "Request Permission" on the Home screen
+3. In System Settings, go to "Privacy & Security" → "Input Monitoring" and allow Khorus
 
-- 許可すると、数秒後に自動で音が鳴り始めます
-- 入力したキーの内容は、保存も送信もしません。音を鳴らすためだけに使います
+- Sounds will start playing automatically a few seconds after permission is granted
+- Your keystrokes are never stored or transmitted. They are used only to play sounds
 
-### 画面
+### Screens
 
-- ホーム
-  - 入力監視の状態を確認する
-  - Enter、Space、その他のキーの音量を、0 から 10 で調整する
-  - ログイン時に起動するかを選ぶ
-- サウンドパック
-  - 使うサウンドパックを一覧から選ぶ
-  - 「読み込む…」で、zip 形式のサウンドパックを追加する
-  - 追加したサウンドパックは、ごみ箱のボタンで削除できる
-- このアプリについて
-  - バージョンなどを確認する
-- ヘッダー右端の「音を鳴らす」で、効果音のオンとオフを切り替える
+- Home
+  - Check input monitoring permission status
+  - Adjust the volume for Enter, Space, and other keys from 0 to 10
+  - Choose whether to launch at login
+- Sound Packs
+  - Select a sound pack from the list
+  - Click "Import…" to add a sound pack in zip format
+  - Delete imported sound packs using the trash button
+- About
+  - View the app version and other information
+- Use "Play Sounds" on the right side of the header to toggle sound effects on or off
 
-### メニューバー
+### Menu Bar
 
-- ウィンドウを閉じても、Khorus はメニューバーに残って動き続けます
-- メニューバーのアイコンから、音のオンとオフの切り替え、ウィンドウを開く、終了ができます
+- Khorus stays in the menu bar and continues running after you close the window
+- Use the menu bar icon to toggle sounds, open the window, or quit the app
 
-## サウンドパックを作る
+## Creating Sound Packs
 
-- zip の直下に、キーと音の対応を書いた pack.json と、音声ファイルを入れます
-- OS 標準の音は、macos:Tink のように名前で指定できます
-- 詳しい仕様は、docs/specs/sound-pack.md を参照してください
+- Place pack.json, which defines the key-to-sound mappings, and the audio files at the root of the zip archive
+- Built-in macOS sounds can be specified by name, such as macos:Tink
+- See docs/specs/sound-pack.md for the full specification
 
-## 開発者の方へ
+## For Developers
 
-- 開発環境の準備やビルドの方法は、DEVELOPMENT.md を参照してください
+- See DEVELOPMENT.md for development environment setup and build instructions
