@@ -37,6 +37,13 @@
 2. src-tauri/src/builtin.rs の一覧に1件追加する
 3. 仕様は docs/specs/sound-pack.md を参照する
 
+## アプリアイコンの更新
+
+1. src-tauri/icons/app-icon.png(1024px の正方形)を差し替える
+2. npx tauri icon src-tauri/icons/app-icon.png を実行する
+3. 生成された android、ios、64x64.png は使わないので削除する
+4. メニューバーのアイコン(tray.png)は別の画像なので、必要なら別に差し替える
+
 ## 開発時の注意
 
 - 自動起動をオンにすると、開発用の実行ファイルがログイン項目に登録されます。動作確認のあとはオフに戻してください
