@@ -8,6 +8,8 @@ if (!root) {
   throw new Error("#root が見つかりません");
 }
 
+document.addEventListener("contextmenu", (event) => event.preventDefault());
+
 createRoot(root).render(
   <StrictMode>
     <App />

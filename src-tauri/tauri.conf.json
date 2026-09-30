@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "khorus",
+  "productName": "Khorus",
   "version": "0.1.0",
   "identifier": "com.avaice.khorus",
   "build": {
@@ -45,5 +45,6 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
-  }
+  },
+  "mainBinaryName": "Khorus"
 }

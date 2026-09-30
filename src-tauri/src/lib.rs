@@ -8,6 +8,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use serde::Serialize;
+use tauri::menu::{Menu, SubmenuBuilder};
 use tauri::State;
 
 use crate::audio::AudioEngine;
@@ -61,6 +62,12 @@ pub fn run() {
     });
 
     tauri::Builder::default()
+        .menu(|app| {
+            let app_menu = SubmenuBuilder::new(app, "Khorus")
+                .quit_with_text("Khorusを終了")
+                .build()?;
+            Menu::with_items(app, &[&app_menu])
+        })
         .manage(AppState { enabled, pack })
         .invoke_handler(tauri::generate_handler![
             get_status,
