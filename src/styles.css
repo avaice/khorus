@@ -1,37 +1,64 @@
 :root {
   color-scheme: light dark;
-  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
-  --bg: #ffffff;
-  --bg-translucent: rgb(255 255 255 / 0.6);
-  --surface: #f5f5f7;
-  --text: #1d1d1f;
-  --text-muted: #6e6e73;
-  --accent: #0a84ff;
-  --border: #d2d2d7;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Hiragino Sans",
+    sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  --window: rgb(255 255 255 / 0.6);
+  --group: rgb(0 0 0 / 0.04);
+  --control: #ffffff;
+  --control-border: rgb(0 0 0 / 0.15);
+  --text: rgb(0 0 0 / 0.85);
+  --text-muted: rgb(0 0 0 / 0.5);
+  --separator: rgb(0 0 0 / 0.1);
+  --switch-off: rgb(0 0 0 / 0.12);
+  --accent: #007aff;
+  --on-accent: #ffffff;
+}
+
+@supports (color: AccentColor) {
+  :root {
+    --accent: AccentColor;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1e1e1e;
-    --bg-translucent: rgb(30 30 30 / 0.6);
-    --surface: #2c2c2e;
-    --text: #f5f5f7;
-    --text-muted: #a1a1a6;
-    --border: #48484a;
+    --window: rgb(30 30 30 / 0.6);
+    --group: rgb(255 255 255 / 0.06);
+    --control: rgb(255 255 255 / 0.15);
+    --control-border: rgb(255 255 255 / 0.12);
+    --text: rgb(255 255 255 / 0.85);
+    --text-muted: rgb(255 255 255 / 0.55);
+    --separator: rgb(255 255 255 / 0.1);
+    --switch-off: rgb(255 255 255 / 0.2);
   }
 }
 
 * {
   box-sizing: border-box;
+  cursor: default;
 }
 
 html,
 body {
   margin: 0;
+  overscroll-behavior: none;
   background: transparent;
   color: var(--text);
   user-select: none;
   -webkit-user-select: none;
+}
+
+button {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
 }
 
 #root {
@@ -53,20 +80,20 @@ body {
   grid-area: header;
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-translucent);
+  padding: 0 20px;
+  border-bottom: 1px solid var(--separator);
+  background: var(--window);
 }
 
 .app-shell-menu {
   grid-area: menu;
-  padding: 60px 8px 12px;
+  padding: 60px 10px 12px;
   overflow-y: auto;
 }
 
 .app-shell-content {
   grid-area: content;
-  background: var(--bg-translucent);
+  background: var(--window);
   overflow-y: auto;
 }
 
@@ -80,14 +107,15 @@ body {
 
 .header-bar-title {
   margin: 0;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 600;
   pointer-events: none;
 }
 
 .menu-list {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -98,67 +126,70 @@ body {
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: transparent;
   color: var(--text);
-  font-size: 14px;
+  font-weight: 700;
   text-align: left;
 }
 
 .menu-list-item[aria-current="page"] {
   background: var(--accent);
-  color: #ffffff;
+  color: var(--on-accent);
 }
 
 .page {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 24px;
+  gap: 20px;
+  padding: 20px;
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--group);
 }
 
 .card-title {
   margin: 0;
-  font-size: 14px;
-  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .text {
   margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
+  color: var(--text-muted);
 }
 
 .pack-title {
-  font-weight: 600;
+  color: var(--text);
+  font-weight: 500;
 }
 
 .button {
   align-self: flex-start;
-  padding: 8px 16px;
+  padding: 3px 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--accent);
-  color: #ffffff;
-  font-size: 14px;
+  color: var(--on-accent);
+  box-shadow: 0 0.5px 1px rgb(0 0 0 / 0.25);
+}
+
+.button:active {
+  filter: brightness(0.9);
 }
 
 .switch {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .switch input {
@@ -168,11 +199,11 @@ body {
 
 .switch-track {
   position: relative;
-  width: 40px;
-  height: 24px;
-  border-radius: 12px;
-  background: var(--border);
-  transition: background 0.15s;
+  width: 38px;
+  height: 22px;
+  border-radius: 11px;
+  background: var(--switch-off);
+  transition: background 0.2s;
 }
 
 .switch-track::after {
@@ -180,11 +211,14 @@ body {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #ffffff;
-  transition: transform 0.15s;
+  box-shadow:
+    0 0 0 0.5px rgb(0 0 0 / 0.04),
+    0 2px 4px rgb(0 0 0 / 0.25);
+  transition: transform 0.2s;
 }
 
 .switch input:checked + .switch-track {
@@ -196,36 +230,31 @@ body {
 }
 
 .switch input:focus-visible + .switch-track {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-
-.switch-label {
-  font-size: 14px;
+  outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
 }
 
 .info-sheet {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   padding: 48px 24px;
 }
 
 .info-sheet-title {
   margin: 0;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--text);
 }
 
 .info-sheet-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   margin: 0;
-  font-size: 15px;
 }
 
 .info-sheet-row {
@@ -237,13 +266,12 @@ body {
 .info-sheet-label {
   text-align: right;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text);
 }
 
 .info-sheet-value {
   margin: 0;
   color: var(--text-muted);
-  opacity: 0.8;
   user-select: text;
   -webkit-user-select: text;
 }
@@ -251,4 +279,8 @@ body {
 .link {
   color: var(--accent);
   text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
 }
