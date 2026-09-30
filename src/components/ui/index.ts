@@ -7,4 +7,5 @@ export * from "./IconButton";
 export * from "./InfoSheet";
 export * from "./Link";
 export * from "./MenuList";
+export * from "./Slider";
 export * from "./Switch";
