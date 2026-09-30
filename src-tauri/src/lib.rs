@@ -16,11 +16,14 @@ use std::sync::Arc;
 use serde::Serialize;
 use tauri::menu::{CheckMenuItem, Menu, SubmenuBuilder};
 use tauri::{Manager, State, Wry};
+use tauri_plugin_autostart::MacosLauncher;
 
 use crate::audio::AudioEngine;
 use crate::library::Library;
 use crate::settings::SettingsStore;
 use crate::volume::Volumes;
+
+const AUTOSTART_ARG: &str = "--autostart";
 
 struct AppState {
     enabled: Arc<AtomicBool>,
@@ -163,6 +166,10 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            Some(vec![AUTOSTART_ARG]),
+        ))
         .menu(|app| {
             let app_menu = SubmenuBuilder::new(app, "Khorus")
                 .quit_with_text("Khorusを終了")
@@ -187,6 +194,10 @@ pub fn run() {
                 }
             });
 
+            if std::env::args().any(|arg| arg == AUTOSTART_ARG) {
+                tray::hide_main_window(app.handle());
+            }
+
             app.manage(AppState {
                 enabled,
                 audio,
@@ -199,7 +210,7 @@ pub fn run() {
         .on_window_event(|window, event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 api.prevent_close();
-                tray::hide_main_window(window);
+                tray::hide_main_window(window.app_handle());
             }
         })
         .invoke_handler(tauri::generate_handler![

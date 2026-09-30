@@ -1,6 +1,6 @@
 import { requestPermission, type Status } from "../../api";
-import { Button, Card, Slider } from "../../components";
-import { useVolumes } from "../../hooks";
+import { Button, Card, Slider, Switch } from "../../components";
+import { useAutostart, useVolumes } from "../../hooks";
 
 const VOLUME_MAX = 10;
 
@@ -11,6 +11,7 @@ type HomePageProps = {
 
 export function HomePage({ status, onChange }: HomePageProps) {
   const { volumes, update } = useVolumes();
+  const autostart = useAutostart();
 
   const handleRequestPermission = async () => {
     await requestPermission();
@@ -54,6 +55,16 @@ export function HomePage({ status, onChange }: HomePageProps) {
             min={0}
             max={VOLUME_MAX}
             onChange={(value) => update("other", value / VOLUME_MAX)}
+          />
+        </Card>
+      )}
+
+      {autostart.enabled !== null && (
+        <Card title="スタートアップ設定">
+          <Switch
+            checked={autostart.enabled}
+            label="ログイン時に起動"
+            onChange={autostart.update}
           />
         </Card>
       )}

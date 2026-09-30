@@ -2,7 +2,7 @@ use tauri::menu::{CheckMenuItem, CheckMenuItemBuilder, Menu, MenuItem, Predefine
 use tauri::tray::TrayIconBuilder;
 #[cfg(target_os = "macos")]
 use tauri::ActivationPolicy;
-use tauri::{AppHandle, Manager, Window, Wry};
+use tauri::{AppHandle, Manager, Wry};
 
 use crate::AppState;
 
@@ -46,9 +46,11 @@ pub fn show_main_window(app: &AppHandle) {
     }
 }
 
-pub fn hide_main_window(window: &Window) {
-    let _ = window.hide();
-    set_dock_visible(window.app_handle(), false);
+pub fn hide_main_window(app: &AppHandle) {
+    if let Some(window) = app.get_webview_window(MAIN_WINDOW) {
+        let _ = window.hide();
+    }
+    set_dock_visible(app, false);
 }
 
 fn set_dock_visible(app: &AppHandle, visible: bool) {
