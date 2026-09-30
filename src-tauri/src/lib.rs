@@ -6,10 +6,11 @@ mod keys;
 mod library;
 mod pack;
 mod settings;
+mod volume;
 
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex, PoisonError};
+use std::sync::Arc;
 
 use serde::Serialize;
 use tauri::menu::{Menu, SubmenuBuilder};
@@ -17,32 +18,29 @@ use tauri::{Manager, State};
 
 use crate::audio::AudioEngine;
 use crate::library::Library;
-use crate::settings::{Settings, SettingsStore};
+use crate::settings::SettingsStore;
+use crate::volume::Volumes;
 
 struct AppState {
     enabled: Arc<AtomicBool>,
     audio: AudioEngine,
     library: Library,
     settings: SettingsStore,
-    selected: Mutex<String>,
 }
 
 impl AppState {
     fn selected_id(&self) -> String {
-        self.selected
-            .lock()
-            .unwrap_or_else(PoisonError::into_inner)
-            .clone()
+        self.settings
+            .get()
+            .selected_pack
+            .unwrap_or_else(|| builtin::default_pack().id.to_string())
     }
 
     fn activate(&self, id: &str) -> Result<(), String> {
         let pack = self.library.load(id).map_err(|error| error.to_string())?;
         self.audio.set_pack(pack);
-        *self.selected.lock().unwrap_or_else(PoisonError::into_inner) = id.to_string();
         self.settings
-            .save(&Settings {
-                selected_pack: Some(id.to_string()),
-            })
+            .update(|settings| settings.selected_pack = Some(id.to_string()))
             .map_err(|error| error.to_string())
     }
 }
@@ -75,6 +73,21 @@ fn get_status(state: State<AppState>) -> Status {
 #[tauri::command]
 fn set_enabled(state: State<AppState>, enabled: bool) {
     state.enabled.store(enabled, Ordering::SeqCst);
+}
+
+#[tauri::command]
+fn get_volumes(state: State<AppState>) -> Volumes {
+    state.settings.get().volumes
+}
+
+#[tauri::command]
+fn set_volumes(state: State<AppState>, volumes: Volumes) -> Result<(), String> {
+    let volumes = volumes.clamped();
+    state.audio.set_volumes(volumes);
+    state
+        .settings
+        .update(|settings| settings.volumes = volumes)
+        .map_err(|error| error.to_string())
 }
 
 #[tauri::command]
@@ -125,13 +138,14 @@ async fn delete_pack(state: State<'_, AppState>, id: String) -> Result<(), Strin
     Ok(())
 }
 
-fn activate_initial(library: &Library, settings: &SettingsStore, audio: &AudioEngine) -> String {
-    let preferred = settings.load().selected_pack;
+fn activate_initial(library: &Library, settings: &SettingsStore, audio: &AudioEngine) {
+    audio.set_volumes(settings.get().volumes.clamped());
     let fallback = builtin::default_pack().id.to_string();
-    for id in preferred.into_iter().chain([fallback]) {
+    for id in settings.get().selected_pack.into_iter().chain([fallback]) {
         if let Ok(pack) = library.load(&id) {
             audio.set_pack(pack);
-            return id;
+            let _ = settings.update(|settings| settings.selected_pack = Some(id));
+            return;
         }
     }
     unreachable!("組み込みのサウンドパックを読み込めません")
@@ -152,9 +166,9 @@ pub fn run() {
             let data_dir = app.path().app_data_dir()?;
             std::fs::create_dir_all(&data_dir)?;
             let library = Library::new(data_dir.join("packs"))?;
-            let settings = SettingsStore::new(data_dir.join("settings.json"));
+            let settings = SettingsStore::load(data_dir.join("settings.json"));
             let audio = AudioEngine::spawn();
-            let selected = activate_initial(&library, &settings, &audio);
+            activate_initial(&library, &settings, &audio);
 
             let enabled = Arc::new(AtomicBool::new(true));
             let listener_enabled = Arc::clone(&enabled);
@@ -170,13 +184,14 @@ pub fn run() {
                 audio,
                 library,
                 settings,
-                selected: Mutex::new(selected),
             });
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
             get_status,
             set_enabled,
+            get_volumes,
+            set_volumes,
             request_permission,
             list_packs,
             select_pack,

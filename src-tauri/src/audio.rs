@@ -6,12 +6,14 @@ use rodio::{OutputStreamBuilder, Sink};
 
 use crate::keys::Key;
 use crate::pack::LoadedPack;
+use crate::volume::Volumes;
 
 const MAX_OVERLAP: usize = 5;
 
 enum Command {
     Play(Key),
     SetPack(Box<LoadedPack>),
+    SetVolumes(Volumes),
 }
 
 #[derive(Clone)]
@@ -30,6 +32,10 @@ impl AudioEngine {
         let _ = self.commands.send(Command::Play(key));
     }
 
+    pub fn set_volumes(&self, volumes: Volumes) {
+        let _ = self.commands.send(Command::SetVolumes(volumes));
+    }
+
     pub fn set_pack(&self, pack: LoadedPack) {
         let _ = self.commands.send(Command::SetPack(Box::new(pack)));
     }
@@ -44,6 +50,7 @@ fn run(receiver: Receiver<Command>) {
         }
     };
     let mut pack: Option<LoadedPack> = None;
+    let mut volumes = Volumes::default();
     let mut playing: HashMap<usize, VecDeque<Sink>> = HashMap::new();
 
     for command in receiver {
@@ -52,7 +59,12 @@ fn run(receiver: Receiver<Command>) {
                 playing.clear();
                 pack = Some(*next);
             }
+            Command::SetVolumes(next) => volumes = next,
             Command::Play(key) => {
+                let volume = volumes.for_key(key);
+                if volume <= 0.0 {
+                    continue;
+                }
                 let Some(pack) = pack.as_ref() else { continue };
                 let Some(id) = pack.pick(key) else { continue };
                 let Some(sound) = pack.sound(id) else {
@@ -66,6 +78,7 @@ fn run(receiver: Receiver<Command>) {
                     }
                 }
                 let sink = Sink::connect_new(stream.mixer());
+                sink.set_volume(volume);
                 sink.append(sound.clone());
                 sinks.push_back(sink);
             }
