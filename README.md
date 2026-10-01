@@ -18,11 +18,10 @@ A macOS app that plays a sound with every keystroke. Load sound packs to customi
 ## Installation
 
 1. Open Terminal
-2. Run the following command: `curl -fsSL TBD | bash`
+2. Run the following command: `curl -fsSL https://raw.githubusercontent.com/avaice/khorus/main/install.sh | bash`
 3. Enter your password if prompted for administrator privileges
 
 - The app is installed in /Applications. If already installed, it will be overwritten with the update
-- The download URL is not yet available (TBD)
 
 ### Uninstallation
 

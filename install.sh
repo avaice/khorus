@@ -2,7 +2,7 @@
 set -euo pipefail
 
 APP_NAME="Khorus"
-DEFAULT_DOWNLOAD_URL="TBD"
+DEFAULT_DOWNLOAD_URL="https://github.com/avaice/khorus/releases/latest/download/Khorus.zip"
 DOWNLOAD_URL="${KHORUS_DOWNLOAD_URL:-$DEFAULT_DOWNLOAD_URL}"
 INSTALL_DIR="${KHORUS_INSTALL_DIR:-/Applications}"
 
@@ -17,10 +17,6 @@ fi
 
 if [ "$(uname -m)" != "arm64" ]; then
   fail "${APP_NAME} は Apple シリコンの Mac でのみ使えます"
-fi
-
-if [ "$DOWNLOAD_URL" = "TBD" ]; then
-  fail "配布 URL が未設定です。環境変数 KHORUS_DOWNLOAD_URL で指定してください"
 fi
 
 work_dir="$(mktemp -d)"
