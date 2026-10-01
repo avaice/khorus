@@ -49,5 +49,11 @@ fi
 
 xattr -dr com.apple.quarantine "$destination" 2>/dev/null || true
 
-echo "Installation complete. Launching ${APP_NAME}."
-open "$destination"
+echo "Installation complete."
+
+printf '\033[1mLaunch %s now? [Y/n]\033[0m ' "$APP_NAME"
+read -r answer 2>/dev/null </dev/tty || answer=""
+case "$answer" in
+  [nN]*) ;;
+  *) open "$destination" ;;
+esac
