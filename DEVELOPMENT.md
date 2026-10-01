@@ -1,60 +1,59 @@
-# 開発者向けガイド
+# Developer Guide
 
-## 必要なもの
+## Prerequisites
 
 - Node.js
-- Rust(最新の安定版)
+- Rust (latest stable)
 - Xcode Command Line Tools
 
-## 対応プラットフォーム
+## Supported Platforms
 
-- macOS の Apple シリコンのみ
-- Intel Mac 向けのビルドと配布は行いません
+- macOS on Apple Silicon
 
-## コマンド
+## Commands
 
-- 依存関係のインストール: npm install
-- 開発モードで起動: npm run tauri dev
-- ビルド: npm run tauri build
-- lint: npm run lint
-- format: npm run format
-- 型チェック: npm run typecheck
-- Rust のテスト: src-tauri ディレクトリで cargo test
-- Rust の lint と format: src-tauri ディレクトリで cargo clippy と cargo fmt
+- Install dependencies: npm install
+- Run in development mode: npm run tauri dev
+- Build: npm run tauri build
+- Lint: npm run lint
+- Format: npm run format
+- Type check: npm run typecheck
+- Rust tests: cargo test in the src-tauri directory
+- Rust lint and format: cargo clippy and cargo fmt in the src-tauri directory
 
-## 構成
+## Project Structure
 
-- src: フロントエンド(React と TypeScript)
-- src-tauri: バックエンド(Rust と Tauri)
-- src-tauri/builtin-packs: 組み込みのサウンドパック
-- install.sh: 利用者向けのインストールスクリプト
-- docs/philosophy: プロダクトのやりたいこと(技術を含まない)
-- docs/specs: サウンドパックの仕様
+- src: Frontend (React and TypeScript)
+- src-tauri: Backend (Rust and Tauri)
+- src-tauri/builtin-packs: Built-in sound packs
+- install.sh: Install script for users
+- docs/philosophy: What the product aims to do (no technical details)
+- docs/specs: Sound pack specification
 
-## 組み込みサウンドパックの追加
+## Adding a Built-in Sound Pack
 
-1. src-tauri/builtin-packs にフォルダを作り、pack.json と必要な音声ファイルを置く
-2. src-tauri/src/builtin.rs の一覧に1件追加する
-3. 仕様は docs/specs/sound-pack.md を参照する
+1. Create a folder in src-tauri/builtin-packs and place pack.json and the required audio files in it
+2. Add an entry to the list in src-tauri/src/builtin.rs
+3. See docs/specs/sound-pack.md for the specification
 
-## アプリアイコンの更新
+## Updating the App Icon
 
-1. src-tauri/icons/app-icon.png(1024px の正方形)を差し替える
-2. npx tauri icon src-tauri/icons/app-icon.png を実行する
-3. 生成された android、ios、64x64.png は使わないので削除する
-4. メニューバーのアイコン(tray.png)は別の画像なので、必要なら別に差し替える
+1. Replace src-tauri/icons/app-icon.png (1024px square)
+2. Run npx tauri icon src-tauri/icons/app-icon.png
+3. Delete the generated android, ios, and 64x64.png, which are not used
+4. The menu bar icon (tray.png) is a separate image, so replace it separately if needed
 
-## 開発時の注意
+## Development Notes
 
-- 自動起動をオンにすると、開発用の実行ファイルがログイン項目に登録されます。動作確認のあとはオフに戻してください
-- 入力監視の許可は、実行ファイルごとに必要です。開発用とビルドしたアプリでは別々に許可してください
-- 配布用の音声ファイルは、ライセンスを確認したものだけをリポジトリに含めてください
+- Enabling launch at login registers the development executable as a login item. Turn it off after testing
+- Input monitoring permission is required per executable. Grant it separately for the development build and the built app
+- Only include audio files in the repository whose licenses have been verified for distribution
 
-## リリース
+## Releasing
 
-1. package.json、src-tauri/tauri.conf.json、src-tauri/Cargo.toml のバージョンを更新する
-2. GitHub で Release を作成して publish する
-3. GitHub Actions がビルドし、Khorus.zip を Release に添付する
+1. Update the version in package.json, src-tauri/tauri.conf.json, and src-tauri/Cargo.toml
+2. Create and publish a Release on GitHub
+3. GitHub Actions builds the app and attaches Khorus.zip to the Release
 
-- install.sh は最新の Release の Khorus.zip をダウンロードします
-- 署名はアドホック署名のみで、公証は行いません
+- install.sh downloads Khorus.zip from the latest Release
+- The app is only ad-hoc signed and is not notarized
