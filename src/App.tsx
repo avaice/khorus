@@ -1,5 +1,5 @@
 import { House, Info, Music } from "lucide-react";
-import { useState } from "react";
+import { Activity, Suspense, useState } from "react";
 import { setEnabled } from "./api";
 import {
   AppShell,
@@ -38,6 +38,8 @@ export default function App() {
     },
   ];
 
+  const visibility = (id: PageId) => (id === pageId ? "visible" : "hidden");
+
   const handleToggle = async (enabled: boolean) => {
     await setEnabled(enabled);
     await refresh();
@@ -63,11 +65,21 @@ export default function App() {
         <MenuList items={menuItems} activeId={pageId} onSelect={setPageId} />
       }
     >
-      {status && pageId === "home" && (
-        <HomePage status={status} onChange={refresh} />
-      )}
-      {pageId === "sound-pack" && <SoundPackPage />}
-      {pageId === "about" && <AboutPage />}
+      <Activity mode={visibility("home")}>
+        <Suspense>
+          {status && <HomePage status={status} onChange={refresh} />}
+        </Suspense>
+      </Activity>
+      <Activity mode={visibility("sound-pack")}>
+        <Suspense>
+          <SoundPackPage />
+        </Suspense>
+      </Activity>
+      <Activity mode={visibility("about")}>
+        <Suspense>
+          <AboutPage />
+        </Suspense>
+      </Activity>
     </AppShell>
   );
 }

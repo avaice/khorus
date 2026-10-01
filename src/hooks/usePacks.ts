@@ -1,23 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
-import { listPacks, type PackSummary } from "../api";
+import { use, useCallback, useState } from "react";
+import { listPacks } from "../api";
+import { once } from "./once";
+
+const loadInitialPacks = once(listPacks);
 
 export function usePacks() {
-  const [packs, setPacks] = useState<PackSummary[]>([]);
+  const [packs, setPacks] = useState(use(loadInitialPacks()));
 
   const refresh = useCallback(async () => {
     setPacks(await listPacks());
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    listPacks().then((next) => {
-      if (active) {
-        setPacks(next);
-      }
-    });
-    return () => {
-      active = false;
-    };
   }, []);
 
   return { packs, refresh };

@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
-import { getKeyMap, type KeyMap } from "../api";
+import { use, useEffect, useState } from "react";
+import { getKeyMap } from "../api";
+import { once } from "./once";
+
+const loadInitialKeyMap = once(() => getKeyMap().catch(() => null));
 
 export function useKeyMap(packId: string | undefined) {
-  const [keyMap, setKeyMap] = useState<KeyMap | null>(null);
+  const [keyMap, setKeyMap] = useState(use(loadInitialKeyMap()));
 
   useEffect(() => {
     if (!packId) {

@@ -1,20 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useState } from "react";
 import { getPlayOnRepeat, setPlayOnRepeat } from "../api";
+import { once } from "./once";
+
+const loadInitialEnabled = once(getPlayOnRepeat);
 
 export function usePlayOnRepeat() {
-  const [enabled, setEnabled] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    getPlayOnRepeat().then((current) => {
-      if (active) {
-        setEnabled(current);
-      }
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
+  const [enabled, setEnabled] = useState(use(loadInitialEnabled()));
 
   const update = useCallback(async (next: boolean) => {
     setEnabled(next);

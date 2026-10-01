@@ -56,51 +56,45 @@ export function HomePage({ status, onChange }: HomePageProps) {
         </Card>
       )}
 
-      {volumes && (
-        <Card title={text.volumeTitle}>
-          <Slider
-            label={text.enterKey}
-            value={Math.round(volumes.enter * VOLUME_MAX)}
-            min={0}
-            max={VOLUME_MAX}
-            onChange={(value) => update("enter", value / VOLUME_MAX)}
-          />
-          <Slider
-            label={text.spaceKey}
-            value={Math.round(volumes.space * VOLUME_MAX)}
-            min={0}
-            max={VOLUME_MAX}
-            onChange={(value) => update("space", value / VOLUME_MAX)}
-          />
-          <Slider
-            label={text.otherKeys}
-            value={Math.round(volumes.other * VOLUME_MAX)}
-            min={0}
-            max={VOLUME_MAX}
-            onChange={(value) => update("other", value / VOLUME_MAX)}
-          />
-        </Card>
-      )}
+      <Card title={text.volumeTitle}>
+        <Slider
+          label={text.enterKey}
+          value={Math.round(volumes.enter * VOLUME_MAX)}
+          min={0}
+          max={VOLUME_MAX}
+          onChange={(value) => update("enter", value / VOLUME_MAX)}
+        />
+        <Slider
+          label={text.spaceKey}
+          value={Math.round(volumes.space * VOLUME_MAX)}
+          min={0}
+          max={VOLUME_MAX}
+          onChange={(value) => update("space", value / VOLUME_MAX)}
+        />
+        <Slider
+          label={text.otherKeys}
+          value={Math.round(volumes.other * VOLUME_MAX)}
+          min={0}
+          max={VOLUME_MAX}
+          onChange={(value) => update("other", value / VOLUME_MAX)}
+        />
+      </Card>
 
-      {playOnRepeat.enabled !== null && (
-        <Card title={text.keyRepeatTitle}>
-          <Switch
-            checked={playOnRepeat.enabled}
-            label={text.playOnRepeat}
-            onChange={playOnRepeat.update}
-          />
-        </Card>
-      )}
+      <Card title={text.keyRepeatTitle}>
+        <Switch
+          checked={playOnRepeat.enabled}
+          label={text.playOnRepeat}
+          onChange={playOnRepeat.update}
+        />
+      </Card>
 
-      {autostart.enabled !== null && (
-        <Card title={text.startupTitle}>
-          <Switch
-            checked={autostart.enabled}
-            label={text.launchAtLogin}
-            onChange={autostart.update}
-          />
-        </Card>
-      )}
+      <Card title={text.startupTitle}>
+        <Switch
+          checked={autostart.enabled}
+          label={text.launchAtLogin}
+          onChange={autostart.update}
+        />
+      </Card>
 
       <Card title={text.languageTitle}>
         <Switch

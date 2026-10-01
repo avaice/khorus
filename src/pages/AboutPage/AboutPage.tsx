@@ -8,10 +8,6 @@ export function AboutPage() {
   const info = useAppInfo();
   const messages = useMessages();
 
-  if (!info) {
-    return null;
-  }
-
   return (
     <InfoSheet
       title={info.name}

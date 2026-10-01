@@ -1,20 +1,11 @@
 import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useState } from "react";
+import { once } from "./once";
+
+const loadInitialEnabled = once(isEnabled);
 
 export function useAutostart() {
-  const [enabled, setEnabled] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    isEnabled().then((current) => {
-      if (active) {
-        setEnabled(current);
-      }
-    });
-    return () => {
-      active = false;
-    };
-  }, []);
+  const [enabled, setEnabled] = useState(use(loadInitialEnabled()));
 
   const update = useCallback(async (next: boolean) => {
     if (next) {
