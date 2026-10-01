@@ -19,12 +19,6 @@
   --danger: #ff3b30;
 }
 
-@supports (color: AccentColor) {
-  :root {
-    --accent: AccentColor;
-  }
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
     --window: rgb(30 30 30 / 0.6);

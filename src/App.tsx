@@ -8,7 +8,7 @@ import {
   Switch,
   type MenuItem,
 } from "./components";
-import { useStatus } from "./hooks";
+import { useStatus, useSystemAccentColor } from "./hooks";
 import { useMessages } from "./i18n";
 import { AboutPage, HomePage, SoundPackPage } from "./pages";
 
@@ -18,6 +18,7 @@ export default function App() {
   const messages = useMessages();
   const [pageId, setPageId] = useState<PageId>("home");
   const { status, refresh } = useStatus();
+  useSystemAccentColor();
 
   const menuItems: readonly MenuItem<PageId>[] = [
     {

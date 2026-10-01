@@ -1,3 +1,4 @@
+mod appearance;
 mod archive;
 mod audio;
 mod builtin;
@@ -73,6 +74,11 @@ struct PackSummary {
     description: String,
     builtin: bool,
     selected: bool,
+}
+
+#[tauri::command]
+fn get_accent_color() -> Option<String> {
+    appearance::accent_color()
 }
 
 #[derive(Serialize)]
@@ -254,6 +260,7 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            get_accent_color,
             get_language,
             set_language,
             get_status,

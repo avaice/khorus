@@ -2063,6 +2063,7 @@ dependencies = [
  "core-foundation",
  "core-graphics",
  "foreign-types",
+ "objc2-app-kit",
  "rand",
  "rodio",
  "serde",
