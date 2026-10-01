@@ -4,6 +4,10 @@
 
 打鍵に合わせて音が鳴る、うるさ〜いアプリ
 
+```sh
+curl -fsSL https://raw.githubusercontent.com/avaice/khorus/main/install.sh | bash
+```
+
 ## 特徴
 
 - キー入力に合わせて効果音を鳴らせます
@@ -19,8 +23,7 @@
 
 ## インストール
 
-`curl -fsSL https://raw.githubusercontent.com/avaice/khorus/main/install.sh | bash`
-
+- ページ冒頭のコマンドを実行してください
 - スクリプトを使いたくない場合は、Releasesからバイナリをダウンロードしてください
 
 ### アンインストール

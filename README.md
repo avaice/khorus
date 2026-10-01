@@ -4,6 +4,10 @@
 
 A noooisy app that makes a sound every time you hit a key
 
+```sh
+curl -fsSL https://raw.githubusercontent.com/avaice/khorus/main/install.sh | bash
+```
+
 ## Features
 
 - Plays sound effects as you type
@@ -19,8 +23,7 @@ A noooisy app that makes a sound every time you hit a key
 
 ## Installation
 
-`curl -fsSL https://raw.githubusercontent.com/avaice/khorus/main/install.sh | bash`
-
+- Run the command at the top of this page
 - If you'd rather not use the script, download the binary from Releases
 
 ### Uninstallation
