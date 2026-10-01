@@ -1,6 +1,7 @@
 {
   "title": "デフォルト",
   "description": "macOS標準のシステムサウンドを、キーごとに使い分けたパックです。",
+  "formatVersion": 1,
   "keys": {
     "a": "macos:Pop",
     "b": "macos:Tink",

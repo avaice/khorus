@@ -92,7 +92,8 @@ mod tests {
         writer.write_all(bytes).unwrap();
     }
 
-    const MANIFEST: &[u8] = r#"{"title":"テスト","description":"説明","keys":{}}"#.as_bytes();
+    const MANIFEST: &[u8] =
+        r#"{"title":"テスト","description":"説明","formatVersion":1,"keys":{}}"#.as_bytes();
 
     #[test]
     fn reads_manifest_and_files() {

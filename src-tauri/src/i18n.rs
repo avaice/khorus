@@ -50,6 +50,7 @@ pub struct Messages {
     pub invalid_zip: &'static str,
     pub too_many_files: &'static str,
     pub symlink: &'static str,
+    pub unsupported_format: &'static str,
     pub pack_not_found: &'static str,
     pub builtin_locked: &'static str,
     pub file_operation_failed: &'static str,
@@ -70,6 +71,8 @@ const JA: Messages = Messages {
     invalid_zip: "zipとして読み込めません",
     too_many_files: "ファイルの数が多すぎます",
     symlink: "シンボリックリンクは使えません",
+    unsupported_format:
+        "このサウンドパックの形式（バージョン {version}）には対応していません。Khorusを更新してください",
     pack_not_found: "サウンドパックが見つかりません",
     builtin_locked: "組み込みのサウンドパックは削除できません",
     file_operation_failed: "ファイルを操作できません",
@@ -90,6 +93,8 @@ const EN: Messages = Messages {
     invalid_zip: "Cannot read as zip",
     too_many_files: "Too many files",
     symlink: "Symbolic links are not allowed",
+    unsupported_format:
+        "This sound pack format (version {version}) is not supported. Please update Khorus",
     pack_not_found: "Sound pack not found",
     builtin_locked: "Built-in sound packs cannot be deleted",
     file_operation_failed: "File operation failed",

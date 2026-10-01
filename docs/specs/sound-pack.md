@@ -13,6 +13,7 @@
   - A key name is a single lowercase character, or space, enter, or backspace
   - A sound specifier is a path relative to the pack, or macos:name
 - fallback: Array of sound specifiers played for character keys not listed in keys (optional)
+- formatVersion: Version of the sound pack format, as an integer (required)
 
 ## Metadata
 
@@ -47,6 +48,12 @@
 - The selected pack persists across launches. If it cannot be loaded, the first built-in pack is used
 - Only zips with pack.json at the root are accepted
 - Metadata added by macOS (__MACOSX, .DS_Store, etc.) is ignored
+
+## Compatibility
+
+- The app defines the newest formatVersion it supports. The current version is 1
+- Packs with a formatVersion newer than the app supports are not imported or loaded
+- Raise formatVersion only when the format changes in a way older apps cannot handle
 
 ## Validation
 

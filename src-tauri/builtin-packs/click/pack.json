@@ -1,6 +1,7 @@
 {
   "title": "クリック",
   "description": "控えめなクリック音で統一したパックです。",
+  "formatVersion": 1,
   "keys": {
     "a": "macos:Tink",
     "b": "macos:Tink",

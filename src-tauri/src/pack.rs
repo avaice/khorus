@@ -16,6 +16,8 @@ pub const MANIFEST_NAME: &str = "pack.json";
 const SYSTEM_PREFIX: &str = "macos:";
 pub const MAX_FILE_BYTES: usize = 5 * 1024 * 1024;
 const MAX_DURATION: Duration = Duration::from_secs(10);
+const SUPPORTED_FORMAT_VERSION: u32 = 1;
+const VERSION_PLACEHOLDER: &str = "{version}";
 
 pub type Sound = Buffered<Decoder<Cursor<Vec<u8>>>>;
 pub type PackFiles = HashMap<String, Vec<u8>>;
@@ -44,6 +46,8 @@ pub enum PackError {
     TooManyFiles,
     #[error("{message}: {0}", message = messages().symlink)]
     Symlink(String),
+    #[error("{message}", message = messages().unsupported_format.replace(VERSION_PLACEHOLDER, &.0.to_string()))]
+    UnsupportedFormat(u32),
 }
 
 #[derive(Deserialize)]
@@ -54,6 +58,8 @@ struct Manifest {
     keys: BTreeMap<String, String>,
     #[serde(default)]
     fallback: Vec<String>,
+    #[serde(rename = "formatVersion")]
+    format_version: u32,
 }
 
 #[derive(Clone, Serialize)]
@@ -116,6 +122,9 @@ pub fn load(files: &PackFiles) -> Result<LoadedPack, PackError> {
         .get(MANIFEST_NAME)
         .ok_or_else(|| PackError::MissingFile(MANIFEST_NAME.to_string()))?;
     let manifest: Manifest = serde_json::from_slice(manifest_bytes)?;
+    if manifest.format_version > SUPPORTED_FORMAT_VERSION {
+        return Err(PackError::UnsupportedFormat(manifest.format_version));
+    }
 
     let mut loader = SoundLoader::new(files);
     let mut keys = HashMap::new();
@@ -288,7 +297,7 @@ mod tests {
     fn unassigned_special_keys_stay_silent() {
         let files: PackFiles = [(
             MANIFEST_NAME.to_string(),
-            br#"{"title":"t","keys":{},"fallback":[]}"#.to_vec(),
+            br#"{"title":"t","formatVersion":1,"keys":{},"fallback":[]}"#.to_vec(),
         )]
         .into_iter()
         .collect();
@@ -301,10 +310,43 @@ mod tests {
     fn missing_pack_file_is_an_error() {
         let files: PackFiles = [(
             MANIFEST_NAME.to_string(),
-            br#"{"title":"t","keys":{"a":"a.mp3"}}"#.to_vec(),
+            br#"{"title":"t","formatVersion":1,"keys":{"a":"a.mp3"}}"#.to_vec(),
         )]
         .into_iter()
         .collect();
         assert!(matches!(load(&files), Err(PackError::MissingFile(_))));
+    }
+
+    #[test]
+    fn accepts_supported_format_version() {
+        let files: PackFiles = [(
+            MANIFEST_NAME.to_string(),
+            br#"{"title":"t","formatVersion":1,"keys":{}}"#.to_vec(),
+        )]
+        .into_iter()
+        .collect();
+        assert!(load(&files).is_ok());
+    }
+
+    #[test]
+    fn rejects_missing_format_version() {
+        let files: PackFiles = [(
+            MANIFEST_NAME.to_string(),
+            br#"{"title":"t","keys":{}}"#.to_vec(),
+        )]
+        .into_iter()
+        .collect();
+        assert!(matches!(load(&files), Err(PackError::InvalidManifest(_))));
+    }
+
+    #[test]
+    fn rejects_newer_format_versions() {
+        let files: PackFiles = [(
+            MANIFEST_NAME.to_string(),
+            br#"{"title":"t","formatVersion":2,"keys":{}}"#.to_vec(),
+        )]
+        .into_iter()
+        .collect();
+        assert!(matches!(load(&files), Err(PackError::UnsupportedFormat(2))));
     }
 }

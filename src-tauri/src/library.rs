@@ -162,7 +162,7 @@ mod tests {
         writer
             .start_file("pack.json", SimpleFileOptions::default())
             .unwrap();
-        let manifest = format!(r#"{{"title":"{title}","keys":{{}}}}"#);
+        let manifest = format!(r#"{{"title":"{title}","formatVersion":1,"keys":{{}}}}"#);
         writer.write_all(manifest.as_bytes()).unwrap();
         writer.finish().unwrap();
     }
