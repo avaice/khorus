@@ -3,8 +3,10 @@ import {
   Button,
   Card,
   ChoiceList,
+  Page,
   Slider,
   Switch,
+  Text,
   type ChoiceItem,
 } from "../../components";
 import { useAutostart, usePlayOnRepeat, useVolumes } from "../../hooks";
@@ -40,14 +42,14 @@ export function HomePage({ status, onChange }: HomePageProps) {
   };
 
   return (
-    <div className="page">
+    <Page>
       {status.permissionGranted ? (
         <Card title={text.permissionTitle}>
-          <p className="text">{text.permissionGranted}</p>
+          <Text>{text.permissionGranted}</Text>
         </Card>
       ) : (
         <Card title={text.permissionRequiredTitle}>
-          <p className="text">{text.permissionRequiredDescription}</p>
+          <Text>{text.permissionRequiredDescription}</Text>
           <Button onClick={handleRequestPermission}>
             {text.requestPermission}
           </Button>
@@ -115,6 +117,6 @@ export function HomePage({ status, onChange }: HomePageProps) {
           disabled={language === "system"}
         />
       </Card>
-    </div>
+    </Page>
   );
 }

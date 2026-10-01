@@ -1,3 +1,5 @@
+import styles from "./Keyboard.module.css";
+
 export type KeyboardKeySize = "normal" | "wide" | "space";
 
 export type KeyboardKey<Id extends string> = {
@@ -21,14 +23,14 @@ export function Keyboard<Id extends string>({
   onHover,
 }: KeyboardProps<Id>) {
   return (
-    <div className="keyboard" onMouseLeave={() => onHover(null)}>
+    <div className={styles.keyboard} onMouseLeave={() => onHover(null)}>
       {rows.map((row, index) => (
-        <div key={index} className="keyboard-row">
+        <div key={index} className={styles.row}>
           {row.map((key) => (
             <button
               key={key.id}
               type="button"
-              className="keyboard-key"
+              className={styles.key}
               data-size={key.size ?? "normal"}
               data-muted={key.muted ?? false}
               data-active={activeIds.has(key.id)}

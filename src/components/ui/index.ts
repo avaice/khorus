@@ -8,5 +8,7 @@ export * from "./InfoSheet";
 export * from "./Keyboard";
 export * from "./Link";
 export * from "./MenuList";
+export * from "./Page";
 export * from "./Slider";
 export * from "./Switch";
+export * from "./Text";

@@ -1,0 +1,48 @@
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.row {
+  display: flex;
+  gap: 4px;
+}
+
+.key {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--control-border);
+  border-radius: 5px;
+  background: var(--control);
+  color: var(--text);
+  font-size: 11px;
+  box-shadow: 0 0.5px 1px rgb(0 0 0 / 0.15);
+}
+
+.key[data-size="wide"] {
+  width: 52px;
+}
+
+.key[data-size="space"] {
+  width: 200px;
+}
+
+.key[data-muted="true"] {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.key:hover,
+.key:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.key:active,
+.key[data-active="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+}

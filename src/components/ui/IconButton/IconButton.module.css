@@ -1,0 +1,12 @@
+.button {
+  display: flex;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.button:active {
+  background: var(--separator);
+}

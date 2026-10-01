@@ -2,10 +2,11 @@ import { ask, open } from "@tauri-apps/plugin-dialog";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { deletePack, importPack, selectPack } from "../../api";
-import { Button, ChoiceList, IconButton } from "../../components";
+import { Button, ChoiceList, IconButton, Page, Text } from "../../components";
 import { useKeyMap, usePacks } from "../../hooks";
 import { useMessages } from "../../i18n";
 import { KeyMapPreview } from "./KeyMapPreview";
+import styles from "./SoundPackPage.module.css";
 
 export function SoundPackPage() {
   const { packs, refresh } = usePacks();
@@ -51,15 +52,15 @@ export function SoundPackPage() {
     });
 
   return (
-    <div className="page">
+    <Page>
       {keyMap && <KeyMapPreview keyMap={keyMap} />}
 
-      <div className="toolbar">
-        <h2 className="toolbar-title">{text.title}</h2>
+      <div className={styles.toolbar}>
+        <h2 className={styles.title}>{text.title}</h2>
         <Button onClick={handleImport}>{text.import}</Button>
       </div>
 
-      {error && <p className="error-text">{error}</p>}
+      {error && <Text tone="danger">{error}</Text>}
 
       <ChoiceList
         items={packs.map((pack) => ({
@@ -77,6 +78,6 @@ export function SoundPackPage() {
         selectedId={selectedId}
         onSelect={handleSelect}
       />
-    </div>
+    </Page>
   );
 }

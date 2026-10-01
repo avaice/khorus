@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./AppShell.module.css";
 
 type AppShellProps = {
   header: ReactNode;
@@ -8,14 +9,14 @@ type AppShellProps = {
 
 export function AppShell({ header, menu, children }: AppShellProps) {
   return (
-    <div className="app-shell">
-      <header className="app-shell-header" data-tauri-drag-region>
+    <div className={styles.shell}>
+      <header className={styles.header} data-tauri-drag-region>
         {header}
       </header>
-      <nav className="app-shell-menu" data-tauri-drag-region>
+      <nav className={styles.menu} data-tauri-drag-region>
         {menu}
       </nav>
-      <main className="app-shell-content">{children}</main>
+      <main className={styles.content}>{children}</main>
     </div>
   );
 }

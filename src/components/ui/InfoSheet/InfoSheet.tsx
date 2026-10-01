@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./InfoSheet.module.css";
 
 export type InfoSheetItem = {
   label: string;
@@ -12,13 +13,13 @@ type InfoSheetProps = {
 
 export function InfoSheet({ title, items }: InfoSheetProps) {
   return (
-    <section className="info-sheet">
-      <h2 className="info-sheet-title">{title}</h2>
-      <dl className="info-sheet-list">
+    <section className={styles.sheet}>
+      <h2 className={styles.title}>{title}</h2>
+      <dl className={styles.list}>
         {items.map((item) => (
-          <div key={item.label} className="info-sheet-row">
-            <dt className="info-sheet-label">{item.label}</dt>
-            <dd className="info-sheet-value">{item.value}</dd>
+          <div key={item.label} className={styles.row}>
+            <dt className={styles.label}>{item.label}</dt>
+            <dd className={styles.value}>{item.value}</dd>
           </div>
         ))}
       </dl>

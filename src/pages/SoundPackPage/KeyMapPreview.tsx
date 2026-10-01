@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { previewKey, type KeyMap } from "../../api";
-import { Card, Keyboard, type KeyboardKey } from "../../components";
+import { Card, Keyboard, Text, type KeyboardKey } from "../../components";
 import { usePressedKeys } from "../../hooks";
 import { useMessages } from "../../i18n";
 
@@ -64,11 +64,11 @@ export function KeyMapPreview({ keyMap }: KeyMapPreviewProps) {
         onPress={(id) => void previewKey(id)}
         onHover={setHoveredId}
       />
-      <p className="text">
+      <Text>
         {hoveredKey
           ? `${hoveredKey.label}: ${describe(hoveredKey.id) ?? text.noSound}`
           : text.keyMapHint}
-      </p>
+      </Text>
     </Card>
   );
 }

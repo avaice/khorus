@@ -1,0 +1,11 @@
+.text {
+  margin: 0;
+}
+
+.text[data-tone="muted"] {
+  color: var(--text-muted);
+}
+
+.text[data-tone="danger"] {
+  color: var(--danger);
+}

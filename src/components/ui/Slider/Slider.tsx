@@ -1,3 +1,5 @@
+import styles from "./Slider.module.css";
+
 type SliderProps = {
   label: string;
   value: number;
@@ -8,18 +10,18 @@ type SliderProps = {
 
 export function Slider({ label, value, min, max, onChange }: SliderProps) {
   return (
-    <label className="slider">
-      <span className="slider-label">{label}</span>
+    <label className={styles.slider}>
+      <span>{label}</span>
       <input
         type="range"
-        className="slider-input"
+        className={styles.input}
         min={min}
         max={max}
         step={1}
         value={value}
         onChange={(event) => onChange(event.currentTarget.valueAsNumber)}
       />
-      <span className="slider-value">{value}</span>
+      <span className={styles.value}>{value}</span>
     </label>
   );
 }

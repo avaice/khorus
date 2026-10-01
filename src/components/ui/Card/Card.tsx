@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./Card.module.css";
 
 type CardProps = {
   title: string;
@@ -7,8 +8,8 @@ type CardProps = {
 
 export function Card({ title, children }: CardProps) {
   return (
-    <section className="card">
-      <h2 className="card-title">{title}</h2>
+    <section className={styles.card}>
+      <h2 className={styles.title}>{title}</h2>
       {children}
     </section>
   );

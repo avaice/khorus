@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+  cursor: default;
+}
+
+html,
+body {
+  margin: 0;
+  overscroll-behavior: none;
+  background: transparent;
+  color: var(--text);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  outline-offset: 1px;
+}
+
+#root {
+  height: 100vh;
+  background: transparent;
+}

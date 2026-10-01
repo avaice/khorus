@@ -1,5 +1,6 @@
 import { openUrl } from "@tauri-apps/plugin-opener";
 import type { ReactNode } from "react";
+import styles from "./Link.module.css";
 
 type LinkProps = {
   href: string;
@@ -9,7 +10,7 @@ type LinkProps = {
 export function Link({ href, children }: LinkProps) {
   return (
     <a
-      className="link"
+      className={styles.link}
       href={href}
       onClick={(event) => {
         event.preventDefault();

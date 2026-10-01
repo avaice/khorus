@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./IconButton.module.css";
 
 type IconButtonProps = {
   label: string;
@@ -10,7 +11,7 @@ export function IconButton({ label, icon, onClick }: IconButtonProps) {
   return (
     <button
       type="button"
-      className="icon-button"
+      className={styles.button}
       aria-label={label}
       title={label}
       onClick={onClick}

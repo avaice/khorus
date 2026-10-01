@@ -1,0 +1,33 @@
+:root {
+  color-scheme: light dark;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Hiragino Sans",
+    sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  --window: rgb(255 255 255 / 0.6);
+  --group: rgb(0 0 0 / 0.04);
+  --control: #ffffff;
+  --control-border: rgb(0 0 0 / 0.15);
+  --text: rgb(0 0 0 / 0.85);
+  --text-muted: rgb(0 0 0 / 0.5);
+  --separator: rgb(0 0 0 / 0.1);
+  --switch-off: rgb(0 0 0 / 0.12);
+  --accent: #007aff;
+  --on-accent: #ffffff;
+  --danger: #ff3b30;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --window: rgb(30 30 30 / 0.6);
+    --group: rgb(255 255 255 / 0.06);
+    --control: rgb(255 255 255 / 0.15);
+    --control-border: rgb(255 255 255 / 0.12);
+    --text: rgb(255 255 255 / 0.85);
+    --text-muted: rgb(255 255 255 / 0.55);
+    --separator: rgb(255 255 255 / 0.1);
+    --switch-off: rgb(255 255 255 / 0.2);
+  }
+}

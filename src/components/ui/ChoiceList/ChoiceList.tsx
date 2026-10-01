@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import type { ReactNode } from "react";
+import styles from "./ChoiceList.module.css";
 
 export type ChoiceItem<Id extends string> = {
   id: Id;
@@ -22,26 +23,24 @@ export function ChoiceList<Id extends string>({
   disabled = false,
 }: ChoiceListProps<Id>) {
   return (
-    <ul className="choice-list">
+    <ul className={styles.list}>
       {items.map((item) => (
-        <li key={item.id} className="choice-list-row">
+        <li key={item.id} className={styles.row}>
           <button
             type="button"
             role="radio"
             aria-checked={item.id === selectedId}
-            className="choice-list-main"
+            className={styles.main}
             disabled={disabled}
             onClick={() => onSelect(item.id)}
           >
-            <span className="choice-list-check">
+            <span className={styles.check}>
               {item.id === selectedId && <Check size={16} />}
             </span>
-            <span className="choice-list-text">
-              <span className="choice-list-label">{item.label}</span>
+            <span className={styles.text}>
+              <span className={styles.label}>{item.label}</span>
               {item.description && (
-                <span className="choice-list-description">
-                  {item.description}
-                </span>
+                <span className={styles.description}>{item.description}</span>
               )}
             </span>
           </button>

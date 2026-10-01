@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import styles from "./MenuList.module.css";
 
 export type MenuItem<Id extends string> = {
   id: Id;
@@ -18,12 +19,12 @@ export function MenuList<Id extends string>({
   onSelect,
 }: MenuListProps<Id>) {
   return (
-    <ul className="menu-list">
+    <ul className={styles.list}>
       {items.map((item) => (
         <li key={item.id}>
           <button
             type="button"
-            className="menu-list-item"
+            className={styles.item}
             aria-current={item.id === activeId ? "page" : undefined}
             onClick={() => onSelect(item.id)}
           >
