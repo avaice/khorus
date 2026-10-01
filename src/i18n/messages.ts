@@ -15,6 +15,8 @@ export type Messages = {
     enterKey: string;
     spaceKey: string;
     otherKeys: string;
+    keyRepeatTitle: string;
+    playOnRepeat: string;
     startupTitle: string;
     launchAtLogin: string;
     languageTitle: string;

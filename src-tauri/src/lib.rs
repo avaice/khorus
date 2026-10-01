@@ -31,6 +31,7 @@ const AUTOSTART_ARG: &str = "--autostart";
 
 struct AppState {
     enabled: Arc<AtomicBool>,
+    play_on_repeat: Arc<AtomicBool>,
     audio: AudioEngine,
     library: Library,
     settings: SettingsStore,
@@ -126,6 +127,20 @@ fn get_status(state: State<AppState>) -> Status {
 #[tauri::command]
 fn set_enabled(state: State<AppState>, enabled: bool) {
     state.set_enabled(enabled);
+}
+
+#[tauri::command]
+fn get_play_on_repeat(state: State<AppState>) -> bool {
+    state.play_on_repeat.load(Ordering::SeqCst)
+}
+
+#[tauri::command]
+fn set_play_on_repeat(state: State<AppState>, enabled: bool) -> Result<(), String> {
+    state.play_on_repeat.store(enabled, Ordering::SeqCst);
+    state
+        .settings
+        .update(|settings| settings.play_on_repeat = enabled)
+        .map_err(|error| error.to_string())
 }
 
 #[tauri::command]
@@ -232,12 +247,18 @@ pub fn run() {
 
             let enabled = Arc::new(AtomicBool::new(true));
             let tray = tray::build(app.handle(), true)?;
+            let play_on_repeat = Arc::new(AtomicBool::new(settings.get().play_on_repeat));
             let listener_enabled = Arc::clone(&enabled);
+            let listener_play_on_repeat = Arc::clone(&play_on_repeat);
             let listener_audio = audio.clone();
-            keyboard::spawn(move |key| {
-                if listener_enabled.load(Ordering::SeqCst) {
-                    listener_audio.play(key);
+            keyboard::spawn(move |key, is_repeat| {
+                if !listener_enabled.load(Ordering::SeqCst) {
+                    return;
                 }
+                if is_repeat && !listener_play_on_repeat.load(Ordering::SeqCst) {
+                    return;
+                }
+                listener_audio.play(key);
             });
 
             if std::env::args().any(|arg| arg == AUTOSTART_ARG) {
@@ -246,6 +267,7 @@ pub fn run() {
 
             app.manage(AppState {
                 enabled,
+                play_on_repeat,
                 audio,
                 library,
                 settings,
@@ -265,6 +287,8 @@ pub fn run() {
             set_language,
             get_status,
             set_enabled,
+            get_play_on_repeat,
+            set_play_on_repeat,
             get_volumes,
             set_volumes,
             request_permission,

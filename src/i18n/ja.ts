@@ -18,6 +18,8 @@ export const ja: Messages = {
     enterKey: "Enterキー",
     spaceKey: "Spaceキー",
     otherKeys: "その他のキー",
+    keyRepeatTitle: "キーリピート",
+    playOnRepeat: "キーを押し続けたときも鳴らす",
     startupTitle: "スタートアップ設定",
     launchAtLogin: "ログイン時に起動",
     languageTitle: "表示言語",

@@ -18,6 +18,8 @@ export const en: Messages = {
     enterKey: "Enter Key",
     spaceKey: "Space Key",
     otherKeys: "Other Keys",
+    keyRepeatTitle: "Key Repeat",
+    playOnRepeat: "Play Sounds While a Key Is Held",
     startupTitle: "Startup",
     launchAtLogin: "Launch at Login",
     languageTitle: "Language",

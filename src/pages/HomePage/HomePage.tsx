@@ -7,7 +7,7 @@ import {
   Switch,
   type ChoiceItem,
 } from "../../components";
-import { useAutostart, useVolumes } from "../../hooks";
+import { useAutostart, usePlayOnRepeat, useVolumes } from "../../hooks";
 import { useI18n } from "../../i18n";
 
 const VOLUME_MAX = 10;
@@ -25,6 +25,7 @@ type HomePageProps = {
 export function HomePage({ status, onChange }: HomePageProps) {
   const { volumes, update } = useVolumes();
   const autostart = useAutostart();
+  const playOnRepeat = usePlayOnRepeat();
   const { messages, language, locale, changeLanguage } = useI18n();
   const text = messages.home;
 
@@ -75,6 +76,16 @@ export function HomePage({ status, onChange }: HomePageProps) {
             min={0}
             max={VOLUME_MAX}
             onChange={(value) => update("other", value / VOLUME_MAX)}
+          />
+        </Card>
+      )}
+
+      {playOnRepeat.enabled !== null && (
+        <Card title={text.keyRepeatTitle}>
+          <Switch
+            checked={playOnRepeat.enabled}
+            label={text.playOnRepeat}
+            onChange={playOnRepeat.update}
           />
         </Card>
       )}

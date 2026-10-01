@@ -13,6 +13,7 @@ pub struct Settings {
     pub selected_pack: Option<String>,
     pub volumes: Volumes,
     pub language: Language,
+    pub play_on_repeat: bool,
 }
 
 pub struct SettingsStore {

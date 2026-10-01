@@ -39,7 +39,7 @@ pub fn request_permission() -> bool {
     unsafe { CGRequestListenEventAccess() }
 }
 
-pub fn spawn(on_key: impl Fn(Key) + Send + Sync + 'static) {
+pub fn spawn(on_key: impl Fn(Key, bool) + Send + Sync + 'static) {
     let on_key = Arc::new(on_key);
     thread::spawn(move || loop {
         let tap_disabled = Arc::new(AtomicBool::new(false));
@@ -56,10 +56,8 @@ pub fn spawn(on_key: impl Fn(Key) + Send + Sync + 'static) {
                         let is_repeat = event
                             .get_integer_value_field(EventField::KEYBOARD_EVENT_AUTOREPEAT)
                             != 0;
-                        if !is_repeat {
-                            if let Some(key) = key_from_event(event) {
-                                callback_on_key(key);
-                            }
+                        if let Some(key) = key_from_event(event) {
+                            callback_on_key(key, is_repeat);
                         }
                     }
                     CGEventType::TapDisabledByTimeout | CGEventType::TapDisabledByUserInput => {
