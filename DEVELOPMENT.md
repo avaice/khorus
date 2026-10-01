@@ -51,9 +51,9 @@
 
 ## Releasing
 
-1. Update the version in package.json, src-tauri/tauri.conf.json, and src-tauri/Cargo.toml
-2. Create and publish a Release on GitHub
-3. GitHub Actions builds the app and attaches Khorus.zip to the Release
+1. Create and publish a Release on GitHub with a tag in the form v1.2.3
+2. GitHub Actions sets the app version from the tag, builds the app, and attaches Khorus.zip to the Release
 
+- The version in the repository stays at 0.0.0, which the app displays as DEV
 - install.sh downloads Khorus.zip from the latest Release
 - The app is only ad-hoc signed and is not notarized
