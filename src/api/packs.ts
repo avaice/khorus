@@ -16,3 +16,12 @@ export const importPack = (path: string) =>
   invoke<string>("import_pack", { path });
 
 export const deletePack = (id: string) => invoke<void>("delete_pack", { id });
+
+export type KeyMap = {
+  keys: Record<string, string>;
+  fallback: string[];
+};
+
+export const getKeyMap = () => invoke<KeyMap>("get_key_map");
+
+export const previewKey = (key: string) => invoke<void>("preview_key", { key });

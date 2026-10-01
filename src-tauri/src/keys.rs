@@ -8,6 +8,17 @@ pub enum Key {
     Backspace,
 }
 
+impl Key {
+    pub fn name(self) -> String {
+        match self {
+            Key::Char(c) => c.to_string(),
+            Key::Space => "space".to_string(),
+            Key::Enter => "enter".to_string(),
+            Key::Backspace => "backspace".to_string(),
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct UnknownKey;
 

@@ -62,6 +62,12 @@ pub struct PackInfo {
     pub description: String,
 }
 
+#[derive(Serialize)]
+pub struct KeyMap {
+    pub keys: BTreeMap<String, String>,
+    pub fallback: Vec<String>,
+}
+
 pub struct LoadedPack {
     pub info: PackInfo,
     sounds: Vec<Sound>,
@@ -90,6 +96,18 @@ pub fn read_info(manifest_bytes: &[u8]) -> Result<PackInfo, PackError> {
     Ok(PackInfo {
         title: manifest.title,
         description: manifest.description,
+    })
+}
+
+pub fn read_key_map(manifest_bytes: &[u8]) -> Result<KeyMap, PackError> {
+    let manifest: Manifest = serde_json::from_slice(manifest_bytes)?;
+    Ok(KeyMap {
+        keys: manifest
+            .keys
+            .into_iter()
+            .map(|(name, spec)| (name.to_lowercase(), spec))
+            .collect(),
+        fallback: manifest.fallback,
     })
 }
 

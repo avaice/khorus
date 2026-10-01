@@ -29,6 +29,10 @@ export type Messages = {
     delete: string;
     deleteDialogTitle: string;
     deleteConfirm: (title: string) => string;
+    keyMapTitle: string;
+    keyMapHint: string;
+    randomSound: (count: number) => string;
+    noSound: string;
   };
   about: {
     version: string;

@@ -13,12 +13,15 @@ const MAX_ENTRIES: usize = 500;
 const MAX_TOTAL_BYTES: usize = 50 * 1024 * 1024;
 
 pub fn read_pack_info(path: &Path) -> Result<PackInfo, PackError> {
+    read_info(&read_manifest(path)?)
+}
+
+pub fn read_manifest(path: &Path) -> Result<Vec<u8>, PackError> {
     let mut archive = ZipArchive::new(File::open(path)?)?;
     let mut entry = archive
         .by_name(MANIFEST_NAME)
         .map_err(|_| PackError::MissingFile(MANIFEST_NAME.to_string()))?;
-    let bytes = read_limited(&mut entry, MANIFEST_NAME)?;
-    read_info(&bytes)
+    read_limited(&mut entry, MANIFEST_NAME)
 }
 
 pub fn read_pack_files(path: &Path) -> Result<PackFiles, PackError> {

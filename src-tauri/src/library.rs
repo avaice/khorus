@@ -7,7 +7,7 @@ use thiserror::Error;
 use crate::archive;
 use crate::builtin::{self, BUILTIN_PACKS};
 use crate::i18n::messages;
-use crate::pack::{self, LoadedPack, PackError, PackInfo};
+use crate::pack::{self, KeyMap, LoadedPack, PackError, PackInfo};
 
 const USER_ID_PREFIX: &str = "user-";
 const ARCHIVE_EXTENSION: &str = "zip";
@@ -63,6 +63,18 @@ impl Library {
         }
         let files = archive::read_pack_files(&self.archive_path(id)?)?;
         Ok(pack::load(&files)?)
+    }
+
+    pub fn key_map(&self, id: &str) -> Result<KeyMap, LibraryError> {
+        if let Some(builtin) = builtin::find(id) {
+            let files = builtin.files();
+            let manifest = files
+                .get(pack::MANIFEST_NAME)
+                .ok_or_else(|| PackError::MissingFile(pack::MANIFEST_NAME.to_string()))?;
+            return Ok(pack::read_key_map(manifest)?);
+        }
+        let manifest = archive::read_manifest(&self.archive_path(id)?)?;
+        Ok(pack::read_key_map(&manifest)?)
     }
 
     pub fn import(&self, source: &Path) -> Result<PackEntry, LibraryError> {

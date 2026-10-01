@@ -17,17 +17,20 @@ use std::sync::Arc;
 
 use serde::Serialize;
 use tauri::menu::{Menu, SubmenuBuilder};
-use tauri::{AppHandle, Manager, State, Wry};
+use tauri::{AppHandle, Emitter, Manager, State, Wry};
 use tauri_plugin_autostart::MacosLauncher;
 
 use crate::audio::AudioEngine;
 use crate::i18n::{Language, Locale};
+use crate::keys::Key;
 use crate::library::Library;
+use crate::pack::{KeyMap, PackError};
 use crate::settings::SettingsStore;
 use crate::tray::TrayMenu;
 use crate::volume::Volumes;
 
 const AUTOSTART_ARG: &str = "--autostart";
+const KEY_PRESS_EVENT: &str = "key-press";
 
 struct AppState {
     enabled: Arc<AtomicBool>,
@@ -181,6 +184,23 @@ fn list_packs(state: State<AppState>) -> Vec<PackSummary> {
 }
 
 #[tauri::command]
+async fn get_key_map(state: State<'_, AppState>) -> Result<KeyMap, String> {
+    state
+        .library
+        .key_map(&state.selected_id())
+        .map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+fn preview_key(state: State<AppState>, key: String) -> Result<(), String> {
+    let parsed = key
+        .parse::<Key>()
+        .map_err(|_| PackError::UnknownKey(key.clone()).to_string())?;
+    state.audio.play(parsed);
+    Ok(())
+}
+
+#[tauri::command]
 async fn select_pack(state: State<'_, AppState>, id: String) -> Result<(), String> {
     state.activate(&id)
 }
@@ -251,7 +271,9 @@ pub fn run() {
             let listener_enabled = Arc::clone(&enabled);
             let listener_play_on_repeat = Arc::clone(&play_on_repeat);
             let listener_audio = audio.clone();
+            let listener_app = app.handle().clone();
             keyboard::spawn(move |key, is_repeat| {
+                let _ = listener_app.emit(KEY_PRESS_EVENT, key.name());
                 if !listener_enabled.load(Ordering::SeqCst) {
                     return;
                 }
@@ -293,6 +315,8 @@ pub fn run() {
             set_volumes,
             request_permission,
             list_packs,
+            get_key_map,
+            preview_key,
             select_pack,
             import_pack,
             delete_pack

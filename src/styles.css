@@ -384,3 +384,52 @@ button {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.keyboard-row {
+  display: flex;
+  gap: 4px;
+}
+
+.keyboard-key {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--control-border);
+  border-radius: 5px;
+  background: var(--control);
+  color: var(--text);
+  font-size: 11px;
+  box-shadow: 0 0.5px 1px rgb(0 0 0 / 0.15);
+}
+
+.keyboard-key[data-size="wide"] {
+  width: 52px;
+}
+
+.keyboard-key[data-size="space"] {
+  width: 200px;
+}
+
+.keyboard-key[data-muted="true"] {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.keyboard-key:hover,
+.keyboard-key:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.keyboard-key:active,
+.keyboard-key[data-active="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+}

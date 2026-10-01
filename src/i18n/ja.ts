@@ -32,6 +32,11 @@ export const ja: Messages = {
     delete: "削除",
     deleteDialogTitle: "サウンドパックの削除",
     deleteConfirm: (title) => `「${title}」を削除しますか？`,
+    keyMapTitle: "キーの割り当て",
+    keyMapHint:
+      "キーにカーソルを合わせると割り当てられた音を表示し、クリックすると再生します。",
+    randomSound: (count) => `ランダム（${count}種類）`,
+    noSound: "割り当てなし",
   },
   about: {
     version: "バージョン",

@@ -5,6 +5,7 @@ export * from "./ChoiceList";
 export * from "./HeaderBar";
 export * from "./IconButton";
 export * from "./InfoSheet";
+export * from "./Keyboard";
 export * from "./Link";
 export * from "./MenuList";
 export * from "./Slider";

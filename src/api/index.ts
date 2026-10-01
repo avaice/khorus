@@ -1,4 +1,5 @@
 export * from "./appearance";
+export * from "./keyboard";
 export * from "./language";
 export * from "./packs";
 export * from "./playback";

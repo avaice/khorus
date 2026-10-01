@@ -32,6 +32,10 @@ export const en: Messages = {
     delete: "Delete",
     deleteDialogTitle: "Delete Sound Pack",
     deleteConfirm: (title) => `Delete “${title}”?`,
+    keyMapTitle: "Key Map",
+    keyMapHint: "Hover over a key to see its sound. Click to play it.",
+    randomSound: (count) => `Random (${count} sounds)`,
+    noSound: "No sound",
   },
   about: {
     version: "Version",
