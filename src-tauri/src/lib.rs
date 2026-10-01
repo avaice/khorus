@@ -1,6 +1,7 @@
 mod archive;
 mod audio;
 mod builtin;
+mod i18n;
 mod keyboard;
 mod keys;
 mod library;
@@ -14,13 +15,15 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 
 use serde::Serialize;
-use tauri::menu::{CheckMenuItem, Menu, SubmenuBuilder};
-use tauri::{Manager, State, Wry};
+use tauri::menu::{Menu, SubmenuBuilder};
+use tauri::{AppHandle, Manager, State, Wry};
 use tauri_plugin_autostart::MacosLauncher;
 
 use crate::audio::AudioEngine;
+use crate::i18n::{Language, Locale};
 use crate::library::Library;
 use crate::settings::SettingsStore;
+use crate::tray::TrayMenu;
 use crate::volume::Volumes;
 
 const AUTOSTART_ARG: &str = "--autostart";
@@ -30,13 +33,13 @@ struct AppState {
     audio: AudioEngine,
     library: Library,
     settings: SettingsStore,
-    tray_toggle: CheckMenuItem<Wry>,
+    tray: TrayMenu,
 }
 
 impl AppState {
     fn set_enabled(&self, enabled: bool) {
         self.enabled.store(enabled, Ordering::SeqCst);
-        let _ = self.tray_toggle.set_checked(enabled);
+        let _ = self.tray.toggle.set_checked(enabled);
     }
 
     fn selected_id(&self) -> String {
@@ -70,6 +73,40 @@ struct PackSummary {
     description: String,
     builtin: bool,
     selected: bool,
+}
+
+#[derive(Serialize)]
+struct LanguageState {
+    language: Language,
+    locale: Locale,
+}
+
+#[tauri::command]
+fn get_language(state: State<AppState>) -> LanguageState {
+    LanguageState {
+        language: state.settings.get().language,
+        locale: i18n::locale(),
+    }
+}
+
+#[tauri::command]
+fn set_language(
+    app: AppHandle,
+    state: State<AppState>,
+    language: Language,
+) -> Result<LanguageState, String> {
+    i18n::set_locale(language.resolve());
+    state.tray.relabel().map_err(|error| error.to_string())?;
+    app.set_menu(build_app_menu(&app).map_err(|error| error.to_string())?)
+        .map_err(|error| error.to_string())?;
+    state
+        .settings
+        .update(|settings| settings.language = language)
+        .map_err(|error| error.to_string())?;
+    Ok(LanguageState {
+        language,
+        locale: i18n::locale(),
+    })
 }
 
 #[tauri::command]
@@ -161,6 +198,13 @@ fn activate_initial(library: &Library, settings: &SettingsStore, audio: &AudioEn
     unreachable!("組み込みのサウンドパックを読み込めません")
 }
 
+fn build_app_menu(app: &AppHandle) -> tauri::Result<Menu<Wry>> {
+    let app_menu = SubmenuBuilder::new(app, "Khorus")
+        .quit_with_text(i18n::messages().quit_app)
+        .build()?;
+    Menu::with_items(app, &[&app_menu])
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -170,22 +214,18 @@ pub fn run() {
             MacosLauncher::LaunchAgent,
             Some(vec![AUTOSTART_ARG]),
         ))
-        .menu(|app| {
-            let app_menu = SubmenuBuilder::new(app, "Khorus")
-                .quit_with_text("Khorusを終了")
-                .build()?;
-            Menu::with_items(app, &[&app_menu])
-        })
         .setup(|app| {
             let data_dir = app.path().app_data_dir()?;
             std::fs::create_dir_all(&data_dir)?;
             let library = Library::new(data_dir.join("packs"))?;
             let settings = SettingsStore::load(data_dir.join("settings.json"));
+            i18n::set_locale(settings.get().language.resolve());
+            app.set_menu(build_app_menu(app.handle())?)?;
             let audio = AudioEngine::spawn();
             activate_initial(&library, &settings, &audio);
 
             let enabled = Arc::new(AtomicBool::new(true));
-            let tray_toggle = tray::build(app.handle(), true)?;
+            let tray = tray::build(app.handle(), true)?;
             let listener_enabled = Arc::clone(&enabled);
             let listener_audio = audio.clone();
             keyboard::spawn(move |key| {
@@ -203,7 +243,7 @@ pub fn run() {
                 audio,
                 library,
                 settings,
-                tray_toggle,
+                tray,
             });
             Ok(())
         })
@@ -214,6 +254,8 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            get_language,
+            set_language,
             get_status,
             set_enabled,
             get_volumes,

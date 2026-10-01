@@ -6,6 +6,7 @@ use thiserror::Error;
 
 use crate::archive;
 use crate::builtin::{self, BUILTIN_PACKS};
+use crate::i18n::messages;
 use crate::pack::{self, LoadedPack, PackError, PackInfo};
 
 const USER_ID_PREFIX: &str = "user-";
@@ -15,11 +16,11 @@ const ARCHIVE_EXTENSION: &str = "zip";
 pub enum LibraryError {
     #[error("{0}")]
     Pack(#[from] PackError),
-    #[error("サウンドパックが見つかりません")]
+    #[error("{message}", message = messages().pack_not_found)]
     NotFound,
-    #[error("組み込みのサウンドパックは削除できません")]
+    #[error("{message}", message = messages().builtin_locked)]
     BuiltinLocked,
-    #[error("ファイルを操作できません: {0}")]
+    #[error("{message}: {0}", message = messages().file_operation_failed)]
     Io(#[from] std::io::Error),
 }
 

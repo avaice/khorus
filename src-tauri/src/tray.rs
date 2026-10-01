@@ -4,16 +4,32 @@ use tauri::tray::TrayIconBuilder;
 use tauri::ActivationPolicy;
 use tauri::{AppHandle, Manager, Wry};
 
+use crate::i18n::messages;
 use crate::AppState;
 
 const MAIN_WINDOW: &str = "main";
 
-pub fn build(app: &AppHandle, enabled: bool) -> tauri::Result<CheckMenuItem<Wry>> {
-    let toggle = CheckMenuItemBuilder::with_id("toggle", "音を鳴らす")
+pub struct TrayMenu {
+    pub toggle: CheckMenuItem<Wry>,
+    open: MenuItem<Wry>,
+    quit: MenuItem<Wry>,
+}
+
+impl TrayMenu {
+    pub fn relabel(&self) -> tauri::Result<()> {
+        let messages = messages();
+        self.toggle.set_text(messages.sound_enabled)?;
+        self.open.set_text(messages.open_app)?;
+        self.quit.set_text(messages.quit_app)
+    }
+}
+
+pub fn build(app: &AppHandle, enabled: bool) -> tauri::Result<TrayMenu> {
+    let toggle = CheckMenuItemBuilder::with_id("toggle", messages().sound_enabled)
         .checked(enabled)
         .build(app)?;
-    let open = MenuItem::with_id(app, "open", "Khorusを開く", true, None::<&str>)?;
-    let quit = MenuItem::with_id(app, "quit", "Khorusを終了", true, None::<&str>)?;
+    let open = MenuItem::with_id(app, "open", messages().open_app, true, None::<&str>)?;
+    let quit = MenuItem::with_id(app, "quit", messages().quit_app, true, None::<&str>)?;
     let separator = PredefinedMenuItem::separator(app)?;
     let menu = Menu::with_items(app, &[&toggle, &open, &separator, &quit])?;
 
@@ -24,7 +40,7 @@ pub fn build(app: &AppHandle, enabled: bool) -> tauri::Result<CheckMenuItem<Wry>
         .on_menu_event(|app, event| match event.id.as_ref() {
             "toggle" => {
                 let state = app.state::<AppState>();
-                if let Ok(checked) = state.tray_toggle.is_checked() {
+                if let Ok(checked) = state.tray.toggle.is_checked() {
                     state.set_enabled(checked);
                 }
             }
@@ -34,7 +50,7 @@ pub fn build(app: &AppHandle, enabled: bool) -> tauri::Result<CheckMenuItem<Wry>
         })
         .build(app)?;
 
-    Ok(toggle)
+    Ok(TrayMenu { toggle, open, quit })
 }
 
 pub fn show_main_window(app: &AppHandle) {

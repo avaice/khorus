@@ -4,6 +4,7 @@ use std::sync::{Mutex, PoisonError};
 
 use serde::{Deserialize, Serialize};
 
+use crate::i18n::Language;
 use crate::volume::Volumes;
 
 #[derive(Clone, Default, Serialize, Deserialize)]
@@ -11,6 +12,7 @@ use crate::volume::Volumes;
 pub struct Settings {
     pub selected_pack: Option<String>,
     pub volumes: Volumes,
+    pub language: Language,
 }
 
 pub struct SettingsStore {

@@ -4,9 +4,11 @@ import { useState } from "react";
 import { deletePack, importPack, selectPack } from "../../api";
 import { Button, ChoiceList, IconButton } from "../../components";
 import { usePacks } from "../../hooks";
+import { useMessages } from "../../i18n";
 
 export function SoundPackPage() {
   const { packs, refresh } = usePacks();
+  const text = useMessages().soundPack;
   const [error, setError] = useState<string | null>(null);
 
   const run = async (action: () => Promise<void>) => {
@@ -25,7 +27,7 @@ export function SoundPackPage() {
     run(async () => {
       const path = await open({
         multiple: false,
-        filters: [{ name: "サウンドパック", extensions: ["zip"] }],
+        filters: [{ name: text.fileFilterName, extensions: ["zip"] }],
       });
       if (path === null) {
         return;
@@ -36,8 +38,8 @@ export function SoundPackPage() {
 
   const handleDelete = (id: string, title: string) =>
     run(async () => {
-      const confirmed = await ask(`「${title}」を削除しますか？`, {
-        title: "サウンドパックの削除",
+      const confirmed = await ask(text.deleteConfirm(title), {
+        title: text.deleteDialogTitle,
         kind: "warning",
       });
       if (confirmed) {
@@ -48,8 +50,8 @@ export function SoundPackPage() {
   return (
     <div className="page">
       <div className="toolbar">
-        <h2 className="toolbar-title">サウンドパック</h2>
-        <Button onClick={handleImport}>読み込む…</Button>
+        <h2 className="toolbar-title">{text.title}</h2>
+        <Button onClick={handleImport}>{text.import}</Button>
       </div>
 
       {error && <p className="error-text">{error}</p>}
@@ -61,7 +63,7 @@ export function SoundPackPage() {
           description: pack.description,
           trailing: pack.builtin ? undefined : (
             <IconButton
-              label="削除"
+              label={text.delete}
               icon={<Trash2 size={16} />}
               onClick={() => handleDelete(pack.id, pack.title)}
             />

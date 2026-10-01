@@ -9,6 +9,7 @@ use rodio::{Decoder, Source};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+use crate::i18n::messages;
 use crate::keys::Key;
 
 pub const MANIFEST_NAME: &str = "pack.json";
@@ -21,27 +22,27 @@ pub type PackFiles = HashMap<String, Vec<u8>>;
 
 #[derive(Debug, Error)]
 pub enum PackError {
-    #[error("{MANIFEST_NAME} を読み込めません: {0}")]
+    #[error("{message}: {0}", message = messages().invalid_manifest)]
     InvalidManifest(#[from] serde_json::Error),
-    #[error("不明なキー名です: {0}")]
+    #[error("{message}: {0}", message = messages().unknown_key)]
     UnknownKey(String),
-    #[error("不正なパスです: {0}")]
+    #[error("{message}: {0}", message = messages().invalid_path)]
     InvalidPath(String),
-    #[error("ファイルが見つかりません: {0}")]
+    #[error("{message}: {0}", message = messages().missing_file)]
     MissingFile(String),
-    #[error("ファイルサイズが上限を超えています: {0}")]
+    #[error("{message}: {0}", message = messages().too_large)]
     TooLarge(String),
-    #[error("音が長すぎます: {0}")]
+    #[error("{message}: {0}", message = messages().too_long)]
     TooLong(String),
-    #[error("音声として読み込めません: {0}")]
+    #[error("{message}: {0}", message = messages().undecodable)]
     Undecodable(String),
-    #[error("ファイルを読み込めません: {0}")]
+    #[error("{message}: {0}", message = messages().unreadable_file)]
     Io(#[from] std::io::Error),
-    #[error("zipとして読み込めません: {0}")]
+    #[error("{message}: {0}", message = messages().invalid_zip)]
     Zip(#[from] zip::result::ZipError),
-    #[error("ファイルの数が多すぎます")]
+    #[error("{message}", message = messages().too_many_files)]
     TooManyFiles,
-    #[error("シンボリックリンクは使えません: {0}")]
+    #[error("{message}: {0}", message = messages().symlink)]
     Symlink(String),
 }
 

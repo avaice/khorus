@@ -334,6 +334,10 @@ button {
   text-align: left;
 }
 
+.choice-list-main:disabled {
+  opacity: 0.4;
+}
+
 .choice-list-check {
   display: flex;
   flex: none;

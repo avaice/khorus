@@ -12,12 +12,14 @@ type ChoiceListProps<Id extends string> = {
   items: readonly ChoiceItem<Id>[];
   selectedId: Id | undefined;
   onSelect: (id: Id) => void;
+  disabled?: boolean;
 };
 
 export function ChoiceList<Id extends string>({
   items,
   selectedId,
   onSelect,
+  disabled = false,
 }: ChoiceListProps<Id>) {
   return (
     <ul className="choice-list">
@@ -28,6 +30,7 @@ export function ChoiceList<Id extends string>({
             role="radio"
             aria-checked={item.id === selectedId}
             className="choice-list-main"
+            disabled={disabled}
             onClick={() => onSelect(item.id)}
           >
             <span className="choice-list-check">

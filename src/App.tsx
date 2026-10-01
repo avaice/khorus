@@ -9,31 +9,33 @@ import {
   type MenuItem,
 } from "./components";
 import { useStatus } from "./hooks";
+import { useMessages } from "./i18n";
 import { AboutPage, HomePage, SoundPackPage } from "./pages";
 
 type PageId = "home" | "sound-pack" | "about";
 
-const MENU_ITEMS: readonly MenuItem<PageId>[] = [
-  {
-    id: "home",
-    label: "ホーム",
-    icon: <House size={16} />,
-  },
-  {
-    id: "sound-pack",
-    label: "サウンドパック",
-    icon: <Music size={16} />,
-  },
-  {
-    id: "about",
-    label: "このアプリについて",
-    icon: <Info size={16} />,
-  },
-];
-
 export default function App() {
+  const messages = useMessages();
   const [pageId, setPageId] = useState<PageId>("home");
   const { status, refresh } = useStatus();
+
+  const menuItems: readonly MenuItem<PageId>[] = [
+    {
+      id: "home",
+      label: messages.menu.home,
+      icon: <House size={16} />,
+    },
+    {
+      id: "sound-pack",
+      label: messages.menu.soundPack,
+      icon: <Music size={16} />,
+    },
+    {
+      id: "about",
+      label: messages.menu.about,
+      icon: <Info size={16} />,
+    },
+  ];
 
   const handleToggle = async (enabled: boolean) => {
     await setEnabled(enabled);
@@ -49,7 +51,7 @@ export default function App() {
             status && (
               <Switch
                 checked={status.enabled}
-                label="音を鳴らす"
+                label={messages.soundEnabled}
                 onChange={handleToggle}
               />
             )
@@ -57,7 +59,7 @@ export default function App() {
         />
       }
       menu={
-        <MenuList items={MENU_ITEMS} activeId={pageId} onSelect={setPageId} />
+        <MenuList items={menuItems} activeId={pageId} onSelect={setPageId} />
       }
     >
       {status && pageId === "home" && (

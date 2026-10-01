@@ -1,8 +1,21 @@
-import { requestPermission, type Status } from "../../api";
-import { Button, Card, Slider, Switch } from "../../components";
+import { requestPermission, type Locale, type Status } from "../../api";
+import {
+  Button,
+  Card,
+  ChoiceList,
+  Slider,
+  Switch,
+  type ChoiceItem,
+} from "../../components";
 import { useAutostart, useVolumes } from "../../hooks";
+import { useI18n } from "../../i18n";
 
 const VOLUME_MAX = 10;
+
+const LANGUAGE_NAMES = {
+  ja: "日本語",
+  en: "English",
+};
 
 type HomePageProps = {
   status: Status;
@@ -12,6 +25,13 @@ type HomePageProps = {
 export function HomePage({ status, onChange }: HomePageProps) {
   const { volumes, update } = useVolumes();
   const autostart = useAutostart();
+  const { messages, language, locale, changeLanguage } = useI18n();
+  const text = messages.home;
+
+  const languageItems: readonly ChoiceItem<Locale>[] = [
+    { id: "en", label: LANGUAGE_NAMES.en },
+    { id: "ja", label: LANGUAGE_NAMES.ja },
+  ];
 
   const handleRequestPermission = async () => {
     await requestPermission();
@@ -21,36 +41,36 @@ export function HomePage({ status, onChange }: HomePageProps) {
   return (
     <div className="page">
       {status.permissionGranted ? (
-        <Card title="入力監視">
-          <p className="text">許可されています。</p>
+        <Card title={text.permissionTitle}>
+          <p className="text">{text.permissionGranted}</p>
         </Card>
       ) : (
-        <Card title="入力監視の許可が必要です">
-          <p className="text">
-            キー入力を検知するために、システム設定の「プライバシーとセキュリティ」から「入力監視」を許可してください。許可すると、数秒後に自動で有効になります。
-          </p>
-          <Button onClick={handleRequestPermission}>許可をリクエスト</Button>
+        <Card title={text.permissionRequiredTitle}>
+          <p className="text">{text.permissionRequiredDescription}</p>
+          <Button onClick={handleRequestPermission}>
+            {text.requestPermission}
+          </Button>
         </Card>
       )}
 
       {volumes && (
-        <Card title="音量">
+        <Card title={text.volumeTitle}>
           <Slider
-            label="Enterキー"
+            label={text.enterKey}
             value={Math.round(volumes.enter * VOLUME_MAX)}
             min={0}
             max={VOLUME_MAX}
             onChange={(value) => update("enter", value / VOLUME_MAX)}
           />
           <Slider
-            label="Spaceキー"
+            label={text.spaceKey}
             value={Math.round(volumes.space * VOLUME_MAX)}
             min={0}
             max={VOLUME_MAX}
             onChange={(value) => update("space", value / VOLUME_MAX)}
           />
           <Slider
-            label="その他のキー"
+            label={text.otherKeys}
             value={Math.round(volumes.other * VOLUME_MAX)}
             min={0}
             max={VOLUME_MAX}
@@ -60,14 +80,30 @@ export function HomePage({ status, onChange }: HomePageProps) {
       )}
 
       {autostart.enabled !== null && (
-        <Card title="スタートアップ設定">
+        <Card title={text.startupTitle}>
           <Switch
             checked={autostart.enabled}
-            label="ログイン時に起動"
+            label={text.launchAtLogin}
             onChange={autostart.update}
           />
         </Card>
       )}
+
+      <Card title={text.languageTitle}>
+        <Switch
+          checked={language === "system"}
+          label={text.systemLanguage}
+          onChange={(useSystem) =>
+            changeLanguage(useSystem ? "system" : locale)
+          }
+        />
+        <ChoiceList
+          items={languageItems}
+          selectedId={locale}
+          onSelect={changeLanguage}
+          disabled={language === "system"}
+        />
+      </Card>
     </div>
   );
 }
