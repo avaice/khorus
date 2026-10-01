@@ -1,61 +1,61 @@
-# サウンドパック仕様
+# Sound Pack Specification
 
-## 形式
+## Format
 
-- zip形式のアーカイブ
-- ルートに pack.json(キーマップ)と、音声ファイル群を含む
+- A zip archive
+- Contains pack.json (the key map) and the audio files at its root
 
 ## pack.json
 
-- title: パックの名前(必須)
-- description: 説明やクレジット(任意)
-- keys: キー名から音の指定へのオブジェクト(必須)
-  - キー名は、小文字1文字、または space、enter、backspace
-  - 音の指定は、パック内の相対パス、または macos:名前
-- fallback: keys にない文字キーに鳴らす音の指定の配列(任意)
+- title: Name of the pack (required)
+- description: Description or credits (optional)
+- keys: Object mapping key names to sound specifiers (required)
+  - A key name is a single lowercase character, or space, enter, or backspace
+  - A sound specifier is a path relative to the pack, or macos:name
+- fallback: Array of sound specifiers played for character keys not listed in keys (optional)
 
-## メタ情報
+## Metadata
 
-- description には、クレジットなどの自由記述を書ける
-- title と description は、取り込み後の一覧や詳細画面で表示する
+- description can contain free-form text such as credits
+- title and description are shown in the list and detail views after import
 
-## 音声ファイルの指定
+## Specifying Audio Files
 
-- パック内のファイルは、パックのルートからの相対パスで指定する
-- 上位ディレクトリへの参照と、アーカイブ内のシンボリックリンクは拒否する
-- OS標準の音を使う場合は、OS名をプレフィックスにした名前指定を使う
-  - 例: macos:Tink
-  - macos: は /System/Library/Sounds 配下のみに解決する
-  - 絶対パスの直接指定は許可しない
-- 指定した名前が存在しない環境では、その音は鳴らさない
+- Files in the pack are specified by paths relative to the pack root
+- References to parent directories and symbolic links in the archive are rejected
+- To use built-in OS sounds, specify a name prefixed with the OS name
+  - Example: macos:Tink
+  - macos: resolves only to files under /System/Library/Sounds
+  - Absolute paths are not allowed
+- If the specified name does not exist in the environment, that sound is not played
 
-## キーマップの挙動
+## Key Map Behavior
 
-- 音を鳴らすのはキーを押した時のみ。離した時は鳴らさない
-- 押しっぱなしによるキーリピートでは鳴らさない。初回の押下のみ鳴らす
-- 文字キーは、入力される文字(小文字化したもの)で音を割り当てる
-- 割り当てのない文字キー(数字や記号など)は、フォールバック用の音のプールからランダムに1つ選んで鳴らす
-- 特殊キー(スペース、エンター、バックスペースなど)は個別に音を割り当てられる
-- 割り当てのない特殊キー(Shift、矢印など)は鳴らさない
-- 同じ音は最大5重まで重ねて再生する。上限を超えた場合は、最も古い再生を止めて鳴らし直す
+- Sounds play only on key press, not on key release
+- Key repeat from holding a key down does not play sounds. Only the initial press does
+- Character keys are assigned sounds by the character they input (lowercased)
+- Character keys without an assignment (numbers, symbols, etc.) play a sound chosen at random from the fallback pool
+- Special keys (space, enter, backspace, etc.) can be assigned individual sounds
+- Special keys without an assignment (Shift, arrow keys, etc.) play no sound
+- The same sound can overlap up to 5 times. Beyond that, the oldest playback is stopped and the sound is played again
 
-## 取り込みと管理
+## Import and Management
 
-- ユーザーが選んだzipを検証し、問題がなければアプリのデータ領域に保存する
-- 取り込んだパックは一覧に追加され、選択して切り替えられる。不要なら削除できる
-- アプリに組み込みのパックは複数持てる。組み込みのパックは削除できない
-- 選択中のパックは、次回の起動時にも引き継ぐ。読み込めない場合は、先頭の組み込みパックを使う
-- zipの中のフォルダ構成は、ルートに pack.json があるものだけを受け付ける
-- macOSが付けるメタ情報(__MACOSX、.DS_Store など)は無視する
+- A zip chosen by the user is validated and, if valid, saved to the app's data directory
+- Imported packs are added to the list, can be selected to switch between them, and can be deleted when no longer needed
+- The app can include multiple built-in packs. Built-in packs cannot be deleted
+- The selected pack persists across launches. If it cannot be loaded, the first built-in pack is used
+- Only zips with pack.json at the root are accepted
+- Metadata added by macOS (__MACOSX, .DS_Store, etc.) is ignored
 
-## 検証
+## Validation
 
-- 取り込み時に、ファイルサイズ、音の長さ、対応する音声形式を検証する
-- 上限は、1ファイル5MBまで、音の長さ10秒まで、zip全体で展開後50MBまで、ファイル数500まで
-- 対応する音声形式は、mp3、wav、flac、ogg、aiff、m4a
-- 上限を超える、または未対応のパックは取り込まない
+- File size, sound duration, and audio format are validated on import
+- Limits are 5MB per file, 10 seconds per sound, 50MB total after extraction, and 500 files
+- Supported audio formats are mp3, wav, flac, ogg, aiff, and m4a
+- Packs that exceed the limits or use unsupported formats are not imported
 
-## 未決事項
+## Open Questions
 
-- 特殊キー(矢印、タブ、Escなど)の名前の追加
-- zip内にフォルダが1つだけある場合の扱い
+- Adding names for more special keys (arrow keys, Tab, Esc, etc.)
+- Handling zips that contain a single folder
