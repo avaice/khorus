@@ -1,31 +1,31 @@
+[English](README.md) | [日本語](README.ja.md)
+
 # Khorus
 
-A macOS app that plays a sound with every keystroke. Load sound packs to customize the sound of your typing.
+A noooisy app that makes a sound every time you hit a key
 
 ## Features
 
-- Play sound effects as you type
-- Adjust the volume separately for Enter, Space, and other keys
-- Import, switch, and delete sound packs
-- Keep running in the menu bar and playing sounds after closing the window
-- Launch automatically at login
+- Plays sound effects as you type
+- Load sound packs to use any sounds you like
+- Lives in the menu bar
+- Supports launching automatically at login
 
 ## Requirements
 
-- macOS
-- A Mac with Apple silicon (Intel Macs are not supported)
+- macOS 11 or later
+- Apple Silicon
+  - Intel Mac users can probably get it working by building it themselves
 
 ## Installation
 
-1. Open Terminal
-2. Run the following command: `curl -fsSL https://raw.githubusercontent.com/avaice/khorus/main/install.sh | bash`
-3. Enter your password if prompted for administrator privileges
+`curl -fsSL https://raw.githubusercontent.com/avaice/khorus/main/install.sh | bash`
 
-- The app is installed in /Applications. If already installed, it will be overwritten with the update
+- If you'd rather not use the script, download the binary from Releases
 
 ### Uninstallation
 
-1. Select "Quit Khorus" from the menu bar icon
+1. Quit Khorus
 2. Delete Khorus.app from /Applications
 3. To also remove settings and sound packs, delete ~/Library/Application Support/com.avaice.khorus
 
@@ -38,34 +38,14 @@ A macOS app that plays a sound with every keystroke. Load sound packs to customi
 1. Launch Khorus
 2. Click "Request Permission" on the Home screen
 3. In System Settings, go to "Privacy & Security" → "Input Monitoring" and allow Khorus
-
-- Sounds will start playing automatically a few seconds after permission is granted
-- Your keystrokes are never stored or transmitted. They are used only to play sounds
-
-### Screens
-
-- Home
-  - Check input monitoring permission status
-  - Adjust the volume for Enter, Space, and other keys from 0 to 10
-  - Choose whether to launch at login
-- Sound Packs
-  - Select a sound pack from the list
-  - Click "Import…" to add a sound pack in zip format
-  - Delete imported sound packs using the trash button
-- About
-  - View the app version and other information
-- Use "Play Sounds" on the right side of the header to toggle sound effects on or off
-
-### Menu Bar
-
-- Khorus stays in the menu bar and continues running after you close the window
-- Use the menu bar icon to toggle sounds, open the window, or quit the app
+4. Enjoy...
 
 ## Creating Sound Packs
 
 - Place pack.json, which defines the key-to-sound mappings, and the audio files at the root of the zip archive
 - Built-in macOS sounds can be specified by name, such as macos:Tink
 - See docs/specs/sound-pack.md for the full specification
+  - We recommend handing it to an AI agent, which should make creating packs easy
 
 ## For Developers
 
