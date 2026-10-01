@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - run: npm ci
+
+      - run: npm run tauri build -- --target aarch64-apple-darwin --bundles app
+
+      - name: Package
+        working-directory: src-tauri/target/aarch64-apple-darwin/release/bundle/macos
+        run: |
+          codesign --force --deep --sign - Khorus.app
+          ditto -c -k --keepParent Khorus.app "$GITHUB_WORKSPACE/Khorus.zip"
+
+      - name: Upload
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" Khorus.zip --clobber

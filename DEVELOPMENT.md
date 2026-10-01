@@ -50,8 +50,11 @@
 - 入力監視の許可は、実行ファイルごとに必要です。開発用とビルドしたアプリでは別々に許可してください
 - 配布用の音声ファイルは、ライセンスを確認したものだけをリポジトリに含めてください
 
-## インストールスクリプトの配布準備
+## リリース
 
-- install.sh の配布 URL(DEFAULT_DOWNLOAD_URL)は未定(TBD)です
-- 配布物は、Khorus.app を含む zip を想定しています
-- README.md のインストール手順の URL も、決まり次第更新してください
+1. package.json、src-tauri/tauri.conf.json、src-tauri/Cargo.toml のバージョンを更新する
+2. GitHub で Release を作成して publish する
+3. GitHub Actions がビルドし、Khorus.zip を Release に添付する
+
+- install.sh は最新の Release の Khorus.zip をダウンロードします
+- 署名はアドホック署名のみで、公証は行いません
